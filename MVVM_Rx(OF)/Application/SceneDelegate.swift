@@ -16,7 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let viewController = SearchController()
+        let viewModel = ReposViewModel(networkingService: NetworkService())
+//        let viewController = ReposViewController(viewModel: viewModel)
+        let viewController = SearchController(viewModel: viewModel)
         window.rootViewController = UINavigationController(rootViewController: viewController)
         self.window = window
         window.makeKeyAndVisible()

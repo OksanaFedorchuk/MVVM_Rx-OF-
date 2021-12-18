@@ -13,7 +13,7 @@ class SearchView: UIView {
         let table = UITableView()
         table.backgroundColor = .cyan
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        table.register(SearchTableCell.self, forCellReuseIdentifier: SearchTableCell.identifier)
         return table
     }()
     
@@ -38,7 +38,7 @@ class SearchView: UIView {
         addSubview(tableView)
     }
     
-    private func setupLayout() {
+    private func setConstraints() {
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.topAnchor.constraint(equalTo: topAnchor),
