@@ -52,9 +52,7 @@ class SearchController: UIViewController {
         .disposed(by: disposeBag)
         
         vm.items
-            .map { repos in
-                return repos.count
-            }
+            .map { $0.count }
             .bind(onNext: { [weak self] num in
                 self?.counter = num
             })
@@ -70,6 +68,11 @@ class SearchController: UIViewController {
                          }
                     })
                     .disposed(by: disposeBag)
+        
+        searchView.searchBar.rx.text.orEmpty
+            .asObservable()
+            .bind(to: vm.searchQuerySubject)
+            .disposed(by: disposeBag)
     }
 }
 

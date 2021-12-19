@@ -17,6 +17,12 @@ class SearchView: UIView {
         return table
     }()
     
+    public var searchBar: UISearchBar = {
+        let sb = UISearchBar()
+        sb.translatesAutoresizingMaskIntoConstraints = false
+        return sb
+    }()
+    
     // MARK: -  Initialization
     
     override init(frame: CGRect) {
@@ -36,12 +42,18 @@ class SearchView: UIView {
     
     private func addSubviews() {
         addSubview(tableView)
+        addSubview(searchBar)
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
+            
+            searchBar.leadingAnchor.constraint(equalTo: leadingAnchor),
+            searchBar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+            searchBar.bottomAnchor.constraint(equalTo: tableView.topAnchor),
+            
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])

@@ -11,7 +11,7 @@ import RxCocoa
 final class ReposViewModel {
     // Inputs
     //    let selectedIndexSubject = PublishSubject<IndexPath>()
-    let searchQuerySubject = BehaviorSubject(value: "swift")
+    let searchQuerySubject = BehaviorRelay(value: "swift")
     let pageCounterSubject = BehaviorRelay(value: 1)//PublishSubject<Int>()
     
     // Outputs
@@ -72,6 +72,7 @@ final class ReposViewModel {
             .map { $0.map {self.items.add(element: $0)} }
             .bind(onNext: { _ in })
             .disposed(by: disposeBag)
+//            .asDriver(onErrorJustReturn: [])
     }
     
     func publishTextAndPage() -> Observable<(searchText: String, page: Int)> {
