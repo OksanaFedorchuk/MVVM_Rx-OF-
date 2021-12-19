@@ -17,7 +17,6 @@ class SearchTableCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
-        label.textColor = .red
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
@@ -26,7 +25,8 @@ class SearchTableCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        addSubview(secondTeamLabel)
+        contentView.addSubview(secondTeamLabel)
+        
         setConstraints()
     }
     
@@ -42,10 +42,11 @@ class SearchTableCell: UITableViewCell {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            secondTeamLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            secondTeamLabel.topAnchor.constraint(equalTo: topAnchor),
-            secondTeamLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            secondTeamLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
+            secondTeamLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            secondTeamLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            secondTeamLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            secondTeamLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
 }

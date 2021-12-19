@@ -10,14 +10,14 @@ import RxCocoa
 
 final class ReposViewModel {
     // Inputs
-    let viewWillAppearSubject = PublishSubject<Void>()
     //    let selectedIndexSubject = PublishSubject<IndexPath>()
-    let searchQuerySubject = BehaviorSubject(value: "more")
+    let searchQuerySubject = BehaviorSubject(value: "swift")
     let pageCounterSubject = BehaviorRelay(value: 1)//PublishSubject<Int>()
     
     // Outputs
     //    var loading: Driver<Bool>
     var repos: Driver<[RepoViewModel]>?
+    let items = BehaviorRelay<[RepoViewModel]>(value: [])
     var count = PublishSubject<Int>()
     //    var selectedRepoId: Driver<Int>
     
@@ -59,7 +59,7 @@ final class ReposViewModel {
     
     func getMyRepos() {
         
-        let nextRepos = getContent()
+        publishTextAndPage()
             .asObservable()
             .debounce(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance)
             .flatMapLatest { searchStr, pageNum in
@@ -68,19 +68,13 @@ final class ReposViewModel {
             .map({ response in
                 return response[0].items
             })
-            .asDriver(onErrorJustReturn: [])
-        
-        
-        //        let repos =  Driver.merge(searchRepos)
-        let repos = Driver.merge(nextRepos)
-//       let repos = nextRepos.asObservable().bind { repos in
-//
-//        }
-        
-        self.repos = repos.map { $0.map { RepoViewModel(repo: $0)} }
+            .map { $0.map { RepoViewModel(repo: $0)} }
+            .map { $0.map {self.items.add(element: $0)} }
+            .bind(onNext: { _ in })
+            .disposed(by: disposeBag)
     }
     
-    func getContent() -> Observable<(searchText: String, page: Int)> {
+    func publishTextAndPage() -> Observable<(searchText: String, page: Int)> {
         return Observable
             .combineLatest(
                 searchQuerySubject
@@ -107,5 +101,14 @@ struct RepoViewModel {
 extension RepoViewModel {
     init(repo: Repo) {
         self.name = repo.name
+    }
+}
+
+extension BehaviorRelay where Element: RangeReplaceableCollection {
+
+    func add(element: Element.Element) {
+        var array = self.value
+        array.append(element)
+        self.accept(array)
     }
 }

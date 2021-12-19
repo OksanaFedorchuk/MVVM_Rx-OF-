@@ -17,6 +17,7 @@ class SearchController: UIViewController {
     
     let vm: ReposViewModel
     private var counter = 0
+    private var pageNumber = 2
     
     init(viewModel: ReposViewModel) {
         self.vm = viewModel
@@ -45,27 +46,27 @@ class SearchController: UIViewController {
     
     private func bindVM() {
         
-        vm.repos!
-            .drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
-                cell.secondTeamLabel.text = element.name
-            }
-            .disposed(by: disposeBag)
+        vm.items.bind(to: searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self) ) { (row, element, cell) in
+            cell.secondTeamLabel.text = element.name
+        }
+        .disposed(by: disposeBag)
         
-        vm.repos!
+        vm.items
             .map { repos in
                 return repos.count
             }
-            .drive { [weak self] num in
+            .bind(onNext: { [weak self] num in
                 self?.counter = num
-            }
+            })
             .disposed(by: disposeBag)
 
         
         searchView.tableView.rx
                      .willDisplayCell
                      .subscribe(onNext: { [weak self] cell, indexPath in
-                         if indexPath.row == (self!.counter - 1) {
-                             self?.vm.pageCounterSubject.accept(2)
+                         if indexPath.row == (self!.counter - 2) {
+                             self?.vm.pageCounterSubject.accept(self?.pageNumber ?? 2)
+                             self?.pageNumber += 1
                          }
                     })
                     .disposed(by: disposeBag)
