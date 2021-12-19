@@ -16,8 +16,9 @@ final class ReposViewModel {
     
     // Outputs
     //    var loading: Driver<Bool>
-    var repos: Driver<[RepoViewModel]>?
-    let items = BehaviorRelay<[RepoViewModel]>(value: [])
+    //    var repos: Driver<[RepoViewModel]>?
+    var reposDriven = BehaviorDriver<[RepoViewModel]>(value: [])
+    //    let items = BehaviorRelay<[RepoViewModel]>(value: [])
     var count = PublishSubject<Int>()
     //    var selectedRepoId: Driver<Int>
     
@@ -61,7 +62,7 @@ final class ReposViewModel {
         
         publishTextAndPage()
             .asObservable()
-            .debounce(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance)
+            .debounce(RxTimeInterval.milliseconds(1000), scheduler: MainScheduler.asyncInstance)
             .flatMapLatest { searchStr, pageNum in
                 self.networkingService.getRepos(withQuery: searchStr, for: pageNum)
             }
@@ -69,10 +70,12 @@ final class ReposViewModel {
                 return response[0].items
             })
             .map { $0.map { RepoViewModel(repo: $0)} }
-            .map { $0.map {self.items.add(element: $0)} }
-            .bind(onNext: { _ in })
+        //.map { $0.map {self.reposDriven.behavior.add(element: $0)} }
+            .bind(onNext: { [self] items in
+                self.reposDriven.behavior.accept(reposDriven.value() + items)
+                //                self.reposDriven.accept(items)
+            })
             .disposed(by: disposeBag)
-//            .asDriver(onErrorJustReturn: [])
     }
     
     func publishTextAndPage() -> Observable<(searchText: String, page: Int)> {
@@ -95,7 +98,7 @@ final class ReposViewModel {
     }
 }
 
-struct RepoViewModel {
+struct RepoViewModel: Equatable {
     let name: String
 }
 
@@ -106,7 +109,7 @@ extension RepoViewModel {
 }
 
 extension BehaviorRelay where Element: RangeReplaceableCollection {
-
+    
     func add(element: Element.Element) {
         var array = self.value
         array.append(element)

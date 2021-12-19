@@ -9,6 +9,12 @@ import UIKit
 
 class SearchView: UIView {
     
+    private var container: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     public var tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .cyan
@@ -41,21 +47,27 @@ class SearchView: UIView {
     }
     
     private func addSubviews() {
-        addSubview(tableView)
-        addSubview(searchBar)
+        addSubview(container)
+        container.addSubview(searchBar)
+        container.addSubview(tableView)
     }
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
             
-            searchBar.leadingAnchor.constraint(equalTo: leadingAnchor),
-            searchBar.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: trailingAnchor),
+            container.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            container.leadingAnchor.constraint(equalTo: leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: trailingAnchor),
+            container.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            searchBar.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            searchBar.topAnchor.constraint(equalTo: container.topAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             searchBar.bottomAnchor.constraint(equalTo: tableView.topAnchor),
             
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
         ])
     }
 }

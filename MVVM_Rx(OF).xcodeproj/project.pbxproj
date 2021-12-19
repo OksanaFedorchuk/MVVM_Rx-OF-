@@ -19,6 +19,7 @@
 		D0E2942D276E10B1000C3C03 /* GitHubAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2942C276E10B1000C3C03 /* GitHubAPI.swift */; };
 		D0E2942F276E20CB000C3C03 /* SearchTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2942E276E20CB000C3C03 /* SearchTableCell.swift */; };
 		D0E29431276E2E62000C3C03 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E29430276E2E62000C3C03 /* SearchViewModel.swift */; };
+		D0E29439276FA6C0000C3C03 /* BehaviorDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E29438276FA6BF000C3C03 /* BehaviorDriver.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		D0E2942C276E10B1000C3C03 /* GitHubAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubAPI.swift; sourceTree = "<group>"; };
 		D0E2942E276E20CB000C3C03 /* SearchTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableCell.swift; sourceTree = "<group>"; };
 		D0E29430276E2E62000C3C03 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		D0E29438276FA6BF000C3C03 /* BehaviorDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BehaviorDriver.swift; path = "MVVM_Rx(OF)/Application/BehaviorDriver.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +134,7 @@
 		D02FB998276DEADB0031602E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D0E29438276FA6BF000C3C03 /* BehaviorDriver.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D02FB99B276DEF0D0031602E /* SearchView.swift in Sources */,
+				D0E29439276FA6C0000C3C03 /* BehaviorDriver.swift in Sources */,
 				D02FB985276DE9CF0031602E /* SearchController.swift in Sources */,
 				D02FB9A0276DFD6C0031602E /* Repo.swift in Sources */,
 				D02FB981276DE9CF0031602E /* AppDelegate.swift in Sources */,

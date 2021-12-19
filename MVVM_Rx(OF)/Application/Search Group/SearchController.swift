@@ -46,28 +46,33 @@ class SearchController: UIViewController {
     
     private func bindVM() {
         
-        vm.items.bind(to: searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self) ) { (row, element, cell) in
+        vm.reposDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
             cell.secondTeamLabel.text = element.name
         }
         .disposed(by: disposeBag)
         
-        vm.items
+        //            .bind(to: searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self) ) { (row, element, cell) in
+        //            cell.secondTeamLabel.text = element.name
+        //        }
+        //        .disposed(by: disposeBag)
+        
+        vm.reposDriven.behavior
             .map { $0.count }
             .bind(onNext: { [weak self] num in
                 self?.counter = num
             })
             .disposed(by: disposeBag)
-
+        
         
         searchView.tableView.rx
-                     .willDisplayCell
-                     .subscribe(onNext: { [weak self] cell, indexPath in
-                         if indexPath.row == (self!.counter - 2) {
-                             self?.vm.pageCounterSubject.accept(self?.pageNumber ?? 2)
-                             self?.pageNumber += 1
-                         }
-                    })
-                    .disposed(by: disposeBag)
+            .willDisplayCell
+            .subscribe(onNext: { [weak self] cell, indexPath in
+                if indexPath.row == (self!.counter - 2) {
+                    self?.vm.pageCounterSubject.accept(self?.pageNumber ?? 2)
+                    self?.pageNumber += 1
+                }
+            })
+            .disposed(by: disposeBag)
         
         searchView.searchBar.rx.text.orEmpty
             .asObservable()
