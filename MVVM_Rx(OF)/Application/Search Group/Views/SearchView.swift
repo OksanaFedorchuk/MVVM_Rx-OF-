@@ -23,7 +23,7 @@ class SearchView: UIView {
         super.init(frame: frame)
         backgroundColor = .cyan.withAlphaComponent(0.3)
         addSubviews()
-        setupLayout()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {

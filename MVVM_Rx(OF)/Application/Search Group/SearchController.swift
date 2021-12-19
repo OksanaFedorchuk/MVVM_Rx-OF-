@@ -37,6 +37,9 @@ class SearchController: UIViewController {
         view.addSubview(searchView)
         searchView.frame = view.bounds
         view.backgroundColor = .cyan
+        
+        title = "GitHub Repo Search"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func bindVM() {

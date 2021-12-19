@@ -19,20 +19,19 @@ final class ReposViewModel {
     var repos: Driver<[RepoViewModel]>
     //    var selectedRepoId: Driver<Int>
     
-    private let networkingService: NetworkService
+    private let networkingService: GitHubAPI    
     
-    
-    init(networkingService: NetworkService) {
+    init(networkingService: GitHubAPI) {
         self.networkingService = networkingService
         
         
         //        let loading = ActivityIndicator()
         //        self.loading = loading.asDriver()
-        
+        let url = networkingService.setReposUlr(matching: "swift", sortedBy: .numberOfStars, inOrder: .descending, perPage: "30")
         let initialRepos = self.viewWillAppearSubject
             .asObservable()
             .flatMap { _ in
-                networkingService.getRepos()
+                networkingService.getRepos(withQuery: "swift", for: url)
                 //                networkingService
                 //                    .execute(url: url)
                 //                    .searchRepos(withQuery: "swift")

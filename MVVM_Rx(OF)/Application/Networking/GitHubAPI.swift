@@ -20,16 +20,9 @@ enum Order: String {
     case descending = "desc"
 }
 
-class GitHubAPI {
+final class GitHubAPI {
     
     private let networkService = NetworkService()
-    
-    //    "https://api.github.com/search/repositories?sort=star&order=desc&per_page=30&q=swift"
-    
-    public func getRepos() -> Observable<[Response]> {
-        //        return networkService.execute(url: url)
-        return networkService.execute(url: URL(string: "https://api.github.com/search/repositories?sort=star&order=desc&per_page=30&q=swift")!)
-    }
     
     public func setReposUlr(matching query: String,
                             sortedBy sorting: Sorting,
@@ -49,5 +42,9 @@ class GitHubAPI {
         guard let url = components.url else {return URL(string: "https://api.github.com/zen")!}
         print("MYDEBUG: url: \(String(describing: url.absoluteString))")
         return url
+    }
+    
+    public func getRepos(withQuery query: String, for url: URL) -> Observable<[Response]> {
+        return networkService.searchRepos(withQuery: query, for: url)
     }
 }
