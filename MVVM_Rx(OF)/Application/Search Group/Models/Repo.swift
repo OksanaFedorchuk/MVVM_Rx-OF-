@@ -9,6 +9,12 @@ import Foundation
 
 struct Response: Decodable {
     let items: [Repo]
+    let count: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case items
+        case count = "total_count"
+    }
 }
 
 struct Repo: Decodable {

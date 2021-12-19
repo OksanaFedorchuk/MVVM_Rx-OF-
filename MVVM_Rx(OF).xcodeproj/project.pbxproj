@@ -115,9 +115,9 @@
 			isa = PBXGroup;
 			children = (
 				D02FB984276DE9CF0031602E /* SearchController.swift */,
-				D02FB99E276DF3160031602E /* Models */,
-				D0E29432276E4559000C3C03 /* Views */,
 				D0E29433276E4576000C3C03 /* View Model */,
+				D0E29432276E4559000C3C03 /* Views */,
+				D02FB99E276DF3160031602E /* Models */,
 			);
 			path = "Search Group";
 			sourceTree = "<group>";

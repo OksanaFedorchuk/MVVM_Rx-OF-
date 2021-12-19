@@ -23,11 +23,13 @@ enum Order: String {
 final class GitHubAPI {
     
     private let networkService = NetworkService()
+    private let maxPage = 5
     
     public func setReposUlr(matching query: String,
                             sortedBy sorting: Sorting,
                             inOrder order: Order,
-                            perPage number: String) -> URL {
+                            perPage number: String,
+                            page: String) -> URL {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.github.com"
@@ -36,7 +38,8 @@ final class GitHubAPI {
             URLQueryItem(name: "q", value: query),
             URLQueryItem(name: "sort", value: sorting.rawValue),
             URLQueryItem(name: "order", value: order.rawValue),
-            URLQueryItem(name: "per_page", value: number)
+            URLQueryItem(name: "per_page", value: number),
+            URLQueryItem(name: "page", value: page)
         ]
         
         guard let url = components.url else {return URL(string: "https://api.github.com/zen")!}
@@ -44,7 +47,8 @@ final class GitHubAPI {
         return url
     }
     
-    public func getRepos(withQuery query: String, for url: URL) -> Observable<[Response]> {
+    public func getRepos(withQuery query: String, for url: URL, page: Int) -> Observable<[Response]> {
+//        if page > maxPage { return (nil) }
         return networkService.searchRepos(withQuery: query, for: url)
     }
 }

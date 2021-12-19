@@ -17,6 +17,7 @@ class SearchController: UIViewController {
     
     let vm: ReposViewModel
     
+    
     init(viewModel: ReposViewModel) {
         self.vm = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -49,11 +50,23 @@ class SearchController: UIViewController {
             .bind(to: vm.viewWillAppearSubject)
             .disposed(by: disposeBag)
         
-        vm.repos
+        vm.repos!
             .drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
                 cell.secondTeamLabel.text = element.name
             }
             .disposed(by: disposeBag)
+        
+        searchView.tableView.rx.didScroll.subscribe { [weak self] _ in
+                    guard let self = self else { return }
+            let offSetY = self.searchView.tableView.contentOffset.y
+            let contentHeight = self.searchView.tableView.contentSize.height
+
+            if offSetY > (contentHeight - self.searchView.tableView.frame.size.height - 100) {
+//                        self.vm.fetchMoreDatas.onNext(())
+                print("MYDEBUG: must refresh now")
+                    }
+                }
+                .disposed(by: disposeBag)
     }
 }
 
