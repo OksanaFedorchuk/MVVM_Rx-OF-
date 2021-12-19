@@ -16,7 +16,7 @@ class SearchController: UIViewController {
     private let disposeBag = DisposeBag()
     
     let vm: ReposViewModel
-    
+    private var counter = 0
     
     init(viewModel: ReposViewModel) {
         self.vm = viewModel
@@ -45,28 +45,30 @@ class SearchController: UIViewController {
     
     private func bindVM() {
         
-        rx.viewWillAppear
-            .asObservable()
-            .bind(to: vm.viewWillAppearSubject)
-            .disposed(by: disposeBag)
-        
         vm.repos!
             .drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
                 cell.secondTeamLabel.text = element.name
             }
             .disposed(by: disposeBag)
         
-        searchView.tableView.rx.didScroll.subscribe { [weak self] _ in
-                    guard let self = self else { return }
-            let offSetY = self.searchView.tableView.contentOffset.y
-            let contentHeight = self.searchView.tableView.contentSize.height
+        vm.repos!
+            .map { repos in
+                return repos.count
+            }
+            .drive { [weak self] num in
+                self?.counter = num
+            }
+            .disposed(by: disposeBag)
 
-            if offSetY > (contentHeight - self.searchView.tableView.frame.size.height - 100) {
-//                        self.vm.fetchMoreDatas.onNext(())
-                print("MYDEBUG: must refresh now")
-                    }
-                }
-                .disposed(by: disposeBag)
+        
+        searchView.tableView.rx
+                     .willDisplayCell
+                     .subscribe(onNext: { [weak self] cell, indexPath in
+                         if indexPath.row == (self!.counter - 1) {
+                             self?.vm.pageCounterSubject.accept(2)
+                         }
+                    })
+                    .disposed(by: disposeBag)
     }
 }
 

@@ -13,61 +13,39 @@ final class ReposViewModel {
     let viewWillAppearSubject = PublishSubject<Void>()
     //    let selectedIndexSubject = PublishSubject<IndexPath>()
     let searchQuerySubject = BehaviorSubject(value: "more")
-    let pageCounterSubject = BehaviorRelay(value: 94)//PublishSubject<Int>()
+    let pageCounterSubject = BehaviorRelay(value: 1)//PublishSubject<Int>()
     
     // Outputs
     //    var loading: Driver<Bool>
     var repos: Driver<[RepoViewModel]>?
+    var count = PublishSubject<Int>()
     //    var selectedRepoId: Driver<Int>
-    
-    let fetchMoreDatas = PublishSubject<Void>()
-//    private var pageCounter = 1
-    private var maxValue = 1
-    private var isPaginationRequestStillResume = false
     
     private let networkingService: GitHubAPI
     private let disposeBag = DisposeBag()
     
     init(networkingService: GitHubAPI) {
-//        bind()
+        //        bind()
         self.networkingService = networkingService
         
         getMyRepos()
         //        let loading = ActivityIndicator()
         //        self.loading = loading.asDriver()
         
-//        let initialRepos = self.viewWillAppearSubject
-//            .asObservable()
-//            .flatMap { _ in
-//
-//                networkingService.getRepos(withQuery: "swift", for: url, page: 1)
-////                pageCounter += 1
-//                //                networkingService
-//                //                    .execute(url: url)
-//                //                    .searchRepos(withQuery: "swift")
-//                //                    .trackActivity(loading)
-//            }
-//            .map({ response in
-//                return response[0].items
-//            })
-//            .asDriver(onErrorJustReturn: [])
-        
-//                let searchRepos = self.searchQuerySubject
-//                    .asObservable()
-//                    .filter { $0.count > 2}
-//                    .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
-//                    .distinctUntilChanged()
-//                    .flatMapLatest { query in
-//                        networkingService.getRepos(withQuery: query, for: url, page: 2)
-////                            .searchRepos(withQuery: query)
-//        //                    .trackActivity(loading)
-//                    }
-//                    .map({ response in
-//                        return response[0].items
-//                    })
-//                    .asDriver(onErrorJustReturn: [])
-        
-
+        //                let searchRepos = self.searchQuerySubject
+        //                    .asObservable()
+        //                    .filter { $0.count > 2}
+        //                    .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
+        //                    .distinctUntilChanged()
+        //                    .flatMapLatest { query in
+        //                        networkingService.getRepos(withQuery: query, for: url, page: 2)
+        ////                            .searchRepos(withQuery: query)
+        //        //                    .trackActivity(loading)
+        //                    }
+        //                    .map({ response in
+        //                        return response[0].items
+        //                    })
+        //                    .asDriver(onErrorJustReturn: [])
         
         //        self.selectedRepoId = self.selectedIndexSubject
         //            .asObservable()
@@ -80,44 +58,46 @@ final class ReposViewModel {
     }
     
     func getMyRepos() {
-        let url = networkingService.setReposUlr(matching: "swift", sortedBy: .numberOfStars, inOrder: .descending, perPage: "30", page: "20")
-        let repos = getContent()
+        
+        let nextRepos = getContent()
             .asObservable()
-//            .subscribe(onNext: { str, int in
-//                networkingService.getRepos(withQuery: str, for: url, page: int)
-//            })
-//            .filter { str, int in
-//                str.count > 2
-//            }
-//            .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
-//            .distinctUntilChanged()
-            .flatMapLatest { str, int in
-                self.networkingService.getRepos(withQuery: str, for: url, page: int)
+            .debounce(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance)
+            .flatMapLatest { searchStr, pageNum in
+                self.networkingService.getRepos(withQuery: searchStr, for: pageNum)
             }
             .map({ response in
                 return response[0].items
             })
             .asDriver(onErrorJustReturn: [])
         
-//        let nextPageRepos = self.pageCounterSubject
-//            .asObservable()
-            
         
-//        let repos =  Driver.merge(searchRepos)
+        //        let repos =  Driver.merge(searchRepos)
+        let repos = Driver.merge(nextRepos)
+//       let repos = nextRepos.asObservable().bind { repos in
+//
+//        }
         
         self.repos = repos.map { $0.map { RepoViewModel(repo: $0)} }
     }
     
     func getContent() -> Observable<(searchText: String, page: Int)> {
-         return Observable
-           .combineLatest(
-            searchQuerySubject.asObservable(),
-             pageCounterSubject.asObservable(),
-             resultSelector: { (text, page) -> (searchText: String, page: Int) in
-               return (searchText: text, page: page)
-           }
-         )
-      }
+        return Observable
+            .combineLatest(
+                searchQuerySubject
+                    .asObservable()
+                    .filter { str in
+                        str.count > 2
+                    }
+                    .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
+                    .distinctUntilChanged(),
+                pageCounterSubject
+                    .asObservable()
+                    .distinctUntilChanged(),
+                resultSelector: { (text, page) -> (searchText: String, page: Int) in
+                    return (searchText: text, page: page)
+                }
+            )
+    }
 }
 
 struct RepoViewModel {

@@ -47,8 +47,9 @@ final class GitHubAPI {
         return url
     }
     
-    public func getRepos(withQuery query: String, for url: URL, page: Int) -> Observable<[Response]> {
+    public func getRepos(withQuery query: String, for page: Int) -> Observable<[Response]> {
 //        if page > maxPage { return (nil) }
+        let url = setReposUlr(matching: query, sortedBy: .numberOfStars, inOrder: .descending, perPage: "30", page: String("\(page)"))
         return networkService.searchRepos(withQuery: query, for: url)
     }
 }
