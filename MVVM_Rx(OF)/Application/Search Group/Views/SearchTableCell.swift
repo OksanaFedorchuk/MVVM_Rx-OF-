@@ -17,6 +17,7 @@ class SearchTableCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
+        label.numberOfLines = 0
         label.font = .systemFont(ofSize: 18, weight: .semibold)
         return label
     }()

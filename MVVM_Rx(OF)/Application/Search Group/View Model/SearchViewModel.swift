@@ -10,55 +10,36 @@ import RxCocoa
 
 final class ReposViewModel {
     // Inputs
-    //    let selectedIndexSubject = PublishSubject<IndexPath>()
+    let selectedIndexSubject = PublishSubject<IndexPath>()
     let searchQuerySubject = BehaviorRelay(value: "swift")
-    let pageCounterSubject = BehaviorRelay(value: 1)//PublishSubject<Int>()
+    let pageCounterSubject = BehaviorRelay(value: 1)
     
     // Outputs
-    //    var loading: Driver<Bool>
-    //    var repos: Driver<[RepoViewModel]>?
     var reposDriven = BehaviorDriver<[RepoViewModel]>(value: [])
-    //    let items = BehaviorRelay<[RepoViewModel]>(value: [])
     var count = PublishSubject<Int>()
-    //    var selectedRepoId: Driver<Int>
+    var selectedRepoUrl: Driver<String>?
     
     private let networkingService: GitHubAPI
     private let disposeBag = DisposeBag()
     
     init(networkingService: GitHubAPI) {
-        //        bind()
         self.networkingService = networkingService
         
-        getMyRepos()
-        //        let loading = ActivityIndicator()
-        //        self.loading = loading.asDriver()
-        
-        //                let searchRepos = self.searchQuerySubject
-        //                    .asObservable()
-        //                    .filter { $0.count > 2}
-        //                    .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
-        //                    .distinctUntilChanged()
-        //                    .flatMapLatest { query in
-        //                        networkingService.getRepos(withQuery: query, for: url, page: 2)
-        ////                            .searchRepos(withQuery: query)
-        //        //                    .trackActivity(loading)
-        //                    }
-        //                    .map({ response in
-        //                        return response[0].items
-        //                    })
-        //                    .asDriver(onErrorJustReturn: [])
-        
-        //        self.selectedRepoId = self.selectedIndexSubject
-        //            .asObservable()
-        //            .withLatestFrom(repos) { (indexPath, repos) in
-        //                return repos[indexPath.item]
-        //            }
-        //            .map { $0.id }
-        //            .asDriver(onErrorJustReturn: 0)
-        
+        subscribeToSearch()
+        bindUrl()
     }
     
-    func getMyRepos() {
+    private func bindUrl() {
+        self.selectedRepoUrl = self.selectedIndexSubject
+            .asObservable()
+            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> RepoViewModel in
+                return repos[indexPath.item]
+            }
+            .map { $0.svnURL }
+            .asDriver(onErrorJustReturn: "")
+    }
+    
+    private func subscribeToSearch() {
         
         publishTextAndPage()
             .asObservable()
@@ -70,10 +51,12 @@ final class ReposViewModel {
                 return response[0].items
             })
             .map { $0.map { RepoViewModel(repo: $0)} }
-        //.map { $0.map {self.reposDriven.behavior.add(element: $0)} }
-            .bind(onNext: { [self] items in
-                self.reposDriven.behavior.accept(reposDriven.value() + items)
-                //                self.reposDriven.accept(items)
+            .bind(onNext: { [weak self] items in
+                //this method sets navigation but does not update tableview on new search text
+                //                self.reposDriven.behavior.accept(reposDriven.value() + items)
+                
+                //this method provides reactive search but doesn't support pagination
+                self?.reposDriven.accept(items)
             })
             .disposed(by: disposeBag)
     }
@@ -100,19 +83,14 @@ final class ReposViewModel {
 
 struct RepoViewModel: Equatable {
     let name: String
+    let id: Int
+    let svnURL: String
 }
 
 extension RepoViewModel {
     init(repo: Repo) {
         self.name = repo.name
-    }
-}
-
-extension BehaviorRelay where Element: RangeReplaceableCollection {
-    
-    func add(element: Element.Element) {
-        var array = self.value
-        array.append(element)
-        self.accept(array)
+        self.id = repo.id
+        self.svnURL = repo.svnURL
     }
 }

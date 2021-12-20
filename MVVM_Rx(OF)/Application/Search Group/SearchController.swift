@@ -11,6 +11,8 @@ import RxCocoa
 
 class SearchController: UIViewController {
     
+    // MARK: -  Properties
+    
     private let searchView = SearchView()
     private let api = GitHubAPI()
     private let disposeBag = DisposeBag()
@@ -18,6 +20,8 @@ class SearchController: UIViewController {
     let vm: ReposViewModel
     private var counter = 0
     private var pageNumber = 2
+    
+    // MARK: -  Inits
     
     init(viewModel: ReposViewModel) {
         self.vm = viewModel
@@ -28,12 +32,17 @@ class SearchController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: -  Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         bindVM()
+        bindNavigation()
     }
+    
+    // MARK: -  Methods
     
     private func setupUI() {
         view.addSubview(searchView)
@@ -46,24 +55,19 @@ class SearchController: UIViewController {
     
     private func bindVM() {
         
+        // -- tableview binding --
         vm.reposDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
             cell.secondTeamLabel.text = element.name
         }
         .disposed(by: disposeBag)
         
-        //            .bind(to: searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self) ) { (row, element, cell) in
-        //            cell.secondTeamLabel.text = element.name
-        //        }
-        //        .disposed(by: disposeBag)
-        
-        vm.reposDriven.behavior
-            .map { $0.count }
-            .bind(onNext: { [weak self] num in
-                self?.counter = num
-            })
+        // -- searchbar binding --
+        searchView.searchBar.rx.text.orEmpty
+            .asObservable()
+            .bind(to: vm.searchQuerySubject)
             .disposed(by: disposeBag)
         
-        
+        // -- pagination binding --
         searchView.tableView.rx
             .willDisplayCell
             .subscribe(onNext: { [weak self] cell, indexPath in
@@ -74,16 +78,29 @@ class SearchController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        searchView.searchBar.rx.text.orEmpty
+        // -- binding for number items --
+        vm.reposDriven.behavior
+            .map { $0.count }
+            .bind(onNext: { [weak self] num in
+                self?.counter = num
+            })
+            .disposed(by: disposeBag)
+        
+        // -- binding to selected cell in tableview --
+        searchView.tableView.rx.itemSelected
             .asObservable()
-            .bind(to: vm.searchQuerySubject)
+            .bind(to: vm.selectedIndexSubject)
             .disposed(by: disposeBag)
     }
-}
-
-extension Reactive where Base: UIViewController {
-    var viewWillAppear: ControlEvent<Void> {
-        let source = self.methodInvoked(#selector(Base.viewWillAppear(_:))).map { _ in }
-        return ControlEvent(events: source)
+    
+    private func bindNavigation() {
+        // -- navigation to repo details in browser --
+        vm.selectedRepoUrl?
+            .drive(onNext: { repoUrl in
+                if let url = URL(string: repoUrl) {
+                    UIApplication.shared.open(url)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
