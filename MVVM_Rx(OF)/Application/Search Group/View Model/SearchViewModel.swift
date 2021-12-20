@@ -22,6 +22,8 @@ final class ReposViewModel {
     private let networkingService: GitHubAPI
     private let disposeBag = DisposeBag()
     
+    private var isNew = false
+    
     init(networkingService: GitHubAPI) {
         self.networkingService = networkingService
         
@@ -52,12 +54,22 @@ final class ReposViewModel {
             })
             .map { $0.map { RepoViewModel(repo: $0)} }
             .bind(onNext: { [weak self] items in
-                //this method sets navigation but does not update tableview on new search text
-                //                self.reposDriven.behavior.accept(reposDriven.value() + items)
                 
-                //this method provides reactive search but doesn't support pagination
-                self?.reposDriven.accept(items)
+                if self!.isNew {
+                    //this method resets search results
+                    self?.reposDriven.accept(items)
+                    self?.isNew.toggle()
+                } else {
+                    //this method adds up pages to search results
+                    self?.reposDriven.behavior.accept((self?.reposDriven.value())! + items)
+                }
             })
+            .disposed(by: disposeBag)
+        
+        searchQuerySubject.asObservable()
+            .bind { _ in
+                self.isNew.toggle()
+            }
             .disposed(by: disposeBag)
     }
     
