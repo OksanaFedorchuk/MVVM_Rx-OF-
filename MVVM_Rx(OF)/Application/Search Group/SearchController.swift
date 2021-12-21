@@ -13,13 +13,19 @@ class SearchController: UIViewController {
     
     // MARK: -  Properties
     
+    private lazy var historyButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(systemName: "clock.arrow.circlepath"), style: .plain, target: self, action: #selector(didTapHistory))
+        button.tintColor = UIColor.blue
+        return button
+    }()
+    
     private let searchView = SearchView()
     private let api = GitHubAPI()
     private let disposeBag = DisposeBag()
     
     let vm: ReposViewModel
     private var counter = 0
-    private var pageNumber = 2
+    private var pageNumber = 0
     
     // MARK: -  Inits
     
@@ -51,6 +57,7 @@ class SearchController: UIViewController {
         
         title = "GitHub Repo Search"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.setRightBarButton(historyButton, animated: false)
     }
     
     private func bindVM() {
@@ -72,8 +79,11 @@ class SearchController: UIViewController {
             .willDisplayCell
             .subscribe(onNext: { [weak self] cell, indexPath in
                 if indexPath.row == (self!.counter - 2) {
-                    self?.vm.pageCounterSubject.accept(self?.pageNumber ?? 2)
-                    self?.pageNumber += 1
+                    guard let strongSelf = self else {return}
+                    strongSelf.vm.pageCounterSubject.accept(strongSelf.pageNumber)
+                    if strongSelf.vm.count > strongSelf.pageNumber {
+                        strongSelf.pageNumber += 1
+                    }
                 }
             })
             .disposed(by: disposeBag)
@@ -102,5 +112,10 @@ class SearchController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
+    }
+    
+    @objc private func didTapHistory() {
+        let historyVC = HistoryVC()
+        navigationController?.pushViewController(historyVC, animated: true)
     }
 }

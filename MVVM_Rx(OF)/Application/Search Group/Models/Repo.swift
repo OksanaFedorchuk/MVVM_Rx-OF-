@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Response: Decodable {
+struct Response: Codable {
     let items: [Repo]
     let count: Int
     
@@ -17,7 +17,7 @@ struct Response: Decodable {
     }
 }
 
-struct Repo: Decodable {
+struct Repo: Codable {
     
     let id: Int
     let name: String
@@ -27,5 +27,13 @@ struct Repo: Decodable {
         case id
         case name
         case svnURL = "svn_url"
+    }
+}
+
+extension Repo {
+    init(repo: RepoViewModel) {
+        self.name = repo.name
+        self.id = repo.id
+        self.svnURL = repo.svnURL
     }
 }

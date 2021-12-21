@@ -11,12 +11,12 @@ import RxCocoa
 final class ReposViewModel {
     // Inputs
     let selectedIndexSubject = PublishSubject<IndexPath>()
-    let searchQuerySubject = BehaviorRelay(value: "swift")
+    let searchQuerySubject = BehaviorRelay(value: "")
     let pageCounterSubject = BehaviorRelay(value: 1)
     
     // Outputs
     var reposDriven = BehaviorDriver<[RepoViewModel]>(value: [])
-    var count = PublishSubject<Int>()
+    var count = Int()
     var selectedRepoUrl: Driver<String>?
     
     private let networkingService: GitHubAPI
@@ -29,6 +29,7 @@ final class ReposViewModel {
         
         subscribeToSearch()
         bindUrl()
+        subscribeRepoSaving()
     }
     
     private func bindUrl() {
@@ -41,15 +42,28 @@ final class ReposViewModel {
             .asDriver(onErrorJustReturn: "")
     }
     
+    private func subscribeRepoSaving() {
+        selectedIndexSubject
+            .asObserver()
+            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> RepoViewModel in
+                return repos[indexPath.item]
+            }
+            .map{ Repo(repo: $0) }
+            .bind { repo in
+                SavedRepos.savedRepos.append(repo)
+            }
+            .disposed(by: disposeBag)
+    }
+    
     private func subscribeToSearch() {
         
         publishTextAndPage()
             .asObservable()
-            .debounce(RxTimeInterval.milliseconds(1000), scheduler: MainScheduler.asyncInstance)
             .flatMapLatest { searchStr, pageNum in
                 self.networkingService.getRepos(withQuery: searchStr, for: pageNum)
             }
-            .map({ response in
+            .map({ [weak self] response -> [Repo] in
+                self?.count = response[0].count
                 return response[0].items
             })
             .map { $0.map { RepoViewModel(repo: $0)} }
@@ -81,7 +95,7 @@ final class ReposViewModel {
                     .filter { str in
                         str.count > 2
                     }
-                    .throttle(RxTimeInterval.seconds(1), scheduler: MainScheduler.instance)
+                    .throttle(RxTimeInterval.milliseconds(500), scheduler: MainScheduler.instance)
                     .distinctUntilChanged(),
                 pageCounterSubject
                     .asObservable()

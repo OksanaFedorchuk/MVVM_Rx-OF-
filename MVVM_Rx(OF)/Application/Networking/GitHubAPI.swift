@@ -29,7 +29,6 @@ final class GitHubAPI {
         //construct valid urlString for the given search text and page number
         let url = setReposUlr(matching: query, sortedBy: .numberOfStars, inOrder: .descending, perPage: "30", page: String("\(page)"))
         return networkService.searchRepos(withQuery: query, for: url)
-            .retry(3)
             .catch ({ [weak self] error in
                 return Observable
                     .just([Response.init(items: [Repo(id: 0,

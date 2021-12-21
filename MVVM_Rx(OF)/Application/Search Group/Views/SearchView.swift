@@ -17,7 +17,7 @@ class SearchView: UIView {
     
     public var tableView: UITableView = {
         let table = UITableView()
-        table.backgroundColor = .cyan
+        table.backgroundColor = .white
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(SearchTableCell.self, forCellReuseIdentifier: SearchTableCell.identifier)
         return table
@@ -33,7 +33,7 @@ class SearchView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .cyan.withAlphaComponent(0.3)
+        backgroundColor = .white
         addSubviews()
         setConstraints()
     }
