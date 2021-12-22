@@ -100,7 +100,7 @@ final class ReposViewModel {
                 pageCounterSubject
                     .asObservable()
                     .distinctUntilChanged(),
-                resultSelector: { (text, page) -> (searchText: String, page: Int) in
+                resultSelector: { [weak self] (text, page) -> (searchText: String, page: Int) in
                     return (searchText: text, page: page)
                 }
             )

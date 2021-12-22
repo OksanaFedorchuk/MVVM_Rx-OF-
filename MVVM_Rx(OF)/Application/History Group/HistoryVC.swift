@@ -32,6 +32,7 @@ class HistoryVC: UIViewController {
         
         setupUI()
         bindVM()
+        bindNavigation()
     }
     
     private func setupUI() {
@@ -49,5 +50,28 @@ class HistoryVC: UIViewController {
             cell.secondTeamLabel.text = element.name
         }
         .disposed(by: disposeBag)
+        
+        //selected index binding
+        historyView.historyTable.rx.itemSelected
+            .asObservable()
+            .bind(to: vm.selectedIndexSubject)
+            .disposed(by: disposeBag)
+        
+        // -- binding to selected cell in tableview --
+        historyView.historyTable.rx.itemSelected
+            .asObservable()
+            .bind(to: vm.selectedIndexSubject)
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindNavigation() {
+        // -- navigation to repo details in browser --
+        vm.selectedRepoUrl?
+            .drive(onNext: { repoUrl in
+                if let url = URL(string: repoUrl) {
+                    UIApplication.shared.open(url)
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }

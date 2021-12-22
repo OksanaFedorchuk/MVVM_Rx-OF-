@@ -12,12 +12,15 @@ import RxCocoa
 final class HistoryViewModel {
     
     let selectedIndexSubject = PublishSubject<IndexPath>()
+    
     var reposDriven = BehaviorDriver<[RepoViewModel]>(value: [])
+    var selectedRepoUrl: Driver<String>?
     
     private let disposeBag = DisposeBag()
     
     init() {
         subscriveToSavedRepos()
+        bindUrl()
     }
     
     private func subscriveToSavedRepos() {
@@ -32,5 +35,15 @@ final class HistoryViewModel {
                 self?.reposDriven.accept(repos)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func bindUrl() {
+        self.selectedRepoUrl = self.selectedIndexSubject
+            .asObservable()
+            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> RepoViewModel in
+                return repos[indexPath.item]
+            }
+            .map { $0.svnURL }
+            .asDriver(onErrorJustReturn: "")
     }
 }
