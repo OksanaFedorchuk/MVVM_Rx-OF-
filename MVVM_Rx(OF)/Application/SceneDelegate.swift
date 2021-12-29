@@ -16,9 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let viewModel = ReposViewModel(networkingService: GitHubAPI())
-//        let viewController = ReposViewController(viewModel: viewModel)
+        
+        let viewModel = ReposViewModel(networkingService: MovieDBAPI())
         let viewController = SearchController(viewModel: viewModel)
+        
         window.rootViewController = UINavigationController(rootViewController: viewController)
         self.window = window
         window.makeKeyAndVisible()

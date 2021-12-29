@@ -32,7 +32,7 @@ class HistoryVC: UIViewController {
         
         setupUI()
         bindVM()
-        bindNavigation()
+        bindAlertOnTap()
     }
     
     private func setupUI() {
@@ -47,7 +47,7 @@ class HistoryVC: UIViewController {
     private func bindVM() {
         // -- tableview binding --
         vm.reposDriven.driver.drive(historyView.historyTable.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
-            cell.secondTeamLabel.text = element.name
+            cell.secondTeamLabel.text = element.title
         }
         .disposed(by: disposeBag)
         
@@ -64,13 +64,14 @@ class HistoryVC: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func bindNavigation() {
-        // -- navigation to repo details in browser --
-        vm.selectedRepoUrl?
-            .drive(onNext: { repoUrl in
-                if let url = URL(string: repoUrl) {
-                    UIApplication.shared.open(url)
-                }
+    private func bindAlertOnTap() {
+        // -- Showing alert with movie --
+        vm.selectedMovie?
+            .drive(onNext: { [weak self] movie in
+                guard let strongSelf = self else { return }
+                let alertController = UIAlertController(title: "\(movie.title)", message: nil, preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+                strongSelf.present(alertController, animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
     }

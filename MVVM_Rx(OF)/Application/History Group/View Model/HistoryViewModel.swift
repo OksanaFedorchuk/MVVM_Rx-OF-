@@ -13,37 +13,39 @@ final class HistoryViewModel {
     
     let selectedIndexSubject = PublishSubject<IndexPath>()
     
-    var reposDriven = BehaviorDriver<[RepoViewModel]>(value: [])
-    var selectedRepoUrl: Driver<String>?
+    var reposDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
+    var selectedMovie: Driver<MoviewViewModel>?
     
     private let disposeBag = DisposeBag()
     
     init() {
         subscriveToSavedRepos()
-        bindUrl()
+        bindSelected()
     }
     
     private func subscriveToSavedRepos() {
         UserDefaults.standard.rx
-            .observe([Data].self, "repos")
-            .map({ data -> [Repo] in
-                guard let repos = UserDefaults.standard.array(forKey: "repos") as? [Data] else {return []}
-                return repos.map { try! JSONDecoder().decode(Repo.self, from: $0) }
+            .observe([Data].self, "movies")
+            .map({ data -> [Movie] in
+                guard let repos = UserDefaults.standard.array(forKey: "movies") as? [Data] else {return []}
+                return repos.map { try! JSONDecoder().decode(Movie.self, from: $0) }
             })
-            .map{ $0.map { RepoViewModel(repo: $0)} }
+            .map{ $0.map { MoviewViewModel(movie: $0)} }
             .bind(onNext: { [weak self] repos in
                 self?.reposDriven.accept(repos)
             })
             .disposed(by: disposeBag)
     }
     
-    private func bindUrl() {
-        self.selectedRepoUrl = self.selectedIndexSubject
+    private func bindSelected() {
+        self.selectedMovie = self.selectedIndexSubject
             .asObservable()
-            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> RepoViewModel in
+            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> MoviewViewModel in
                 return repos[indexPath.item]
             }
-            .map { $0.svnURL }
-            .asDriver(onErrorJustReturn: "")
+            .asDriver(onErrorJustReturn: MoviewViewModel(id: 0,
+                                                         title: "Movie Error",
+                                                         overview: "Was no able to get the selected movie",
+                                                         posterPath: ""))
     }
 }

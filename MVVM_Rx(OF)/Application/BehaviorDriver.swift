@@ -15,9 +15,9 @@ public class BehaviorDriver<Element>: NSObject {
     var driver: Driver<Element> {
         return behavior.asDriver()
     }
-
+    
     public init(value: Element) {
-       behavior =  BehaviorRelay<Element>(value: value)
+        behavior =  BehaviorRelay<Element>(value: value)
     }
     
     public func value()->Element {

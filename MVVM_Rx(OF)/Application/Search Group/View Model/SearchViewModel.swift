@@ -15,42 +15,44 @@ final class ReposViewModel {
     let pageCounterSubject = BehaviorRelay(value: 1)
     
     // Outputs
-    var reposDriven = BehaviorDriver<[RepoViewModel]>(value: [])
+    var reposDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
     var count = Int()
-    var selectedRepoUrl: Driver<String>?
+    var selectedMovie: Driver<MoviewViewModel>?
     
-    private let networkingService: GitHubAPI
+    private let networkingService: MovieDBAPI
     private let disposeBag = DisposeBag()
     
     private var isNew = false
     
-    init(networkingService: GitHubAPI) {
+    init(networkingService: MovieDBAPI) {
         self.networkingService = networkingService
         
         subscribeToSearch()
-        bindUrl()
+        bindSelected()
         subscribeRepoSaving()
     }
     
-    private func bindUrl() {
-        self.selectedRepoUrl = self.selectedIndexSubject
+    private func bindSelected() {
+        self.selectedMovie = self.selectedIndexSubject
             .asObservable()
-            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> RepoViewModel in
+            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> MoviewViewModel in
                 return repos[indexPath.item]
             }
-            .map { $0.svnURL }
-            .asDriver(onErrorJustReturn: "")
+            .asDriver(onErrorJustReturn: MoviewViewModel(id: 0,
+                                                         title: "Movie Error",
+                                                         overview: "Was no able to get the selected movie",
+                                                         posterPath: ""))
     }
     
     private func subscribeRepoSaving() {
         selectedIndexSubject
             .asObserver()
-            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> RepoViewModel in
+            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> MoviewViewModel in
                 return repos[indexPath.item]
             }
-            .map{ Repo(repo: $0) }
-            .bind { repo in
-                SavedRepos.savedRepos.append(repo)
+            .map{ Movie(movie: $0) }
+            .bind { movie in
+                SavedMovies.savedMovies.append(movie)
             }
             .disposed(by: disposeBag)
     }
@@ -60,13 +62,13 @@ final class ReposViewModel {
         publishTextAndPage()
             .asObservable()
             .flatMapLatest { searchStr, pageNum in
-                self.networkingService.getRepos(withQuery: searchStr, for: pageNum)
+                self.networkingService.getMovie(withQuery: searchStr, for: pageNum)
             }
-            .map({ [weak self] response -> [Repo] in
-                self?.count = response[0].count
-                return response[0].items
+            .map({ [weak self] response -> [Movie] in
+                self?.count = response[0].totalPages
+                return response[0].movies
             })
-            .map { $0.map { RepoViewModel(repo: $0)} }
+            .map { $0.map { MoviewViewModel(movie: $0)} }
             .bind(onNext: { [weak self] items in
                 
                 if self!.isNew {
@@ -107,16 +109,22 @@ final class ReposViewModel {
     }
 }
 
-struct RepoViewModel: Equatable {
-    let name: String
+struct MoviewViewModel: Equatable {
     let id: Int
-    let svnURL: String
+    let title: String
+    let overview: String
+    let posterPath: String
+    
+    var image: URL {
+        URL(string: "https://image.tmdb.org/t/p/w300/\(posterPath)")!
+    }
 }
 
-extension RepoViewModel {
-    init(repo: Repo) {
-        self.name = repo.name
-        self.id = repo.id
-        self.svnURL = repo.svnURL
+extension MoviewViewModel {
+    init(movie: Movie) {
+        self.id = movie.id
+        self.title = movie.title
+        self.overview = movie.overview
+        self.posterPath = movie.posterPath ?? "No Poster Available"
     }
 }
