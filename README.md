@@ -7,3 +7,7 @@
 - UIKit
 - Saving each tapped movie in UserDefaults
 - History screen with tapped movies
+
+
+The task was realized in two days with no prior RxSwift experience.
+Some minor improvements and fixes added later
