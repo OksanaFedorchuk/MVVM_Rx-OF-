@@ -40,13 +40,13 @@ class HistoryVC: UIViewController {
         historyView.frame = view.bounds
         view.backgroundColor = .white
         
-        title = "GitHub Repo Search"
+        title = "Tapped Movies"
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     private func bindVM() {
         // -- tableview binding --
-        vm.reposDriven.driver.drive(historyView.historyTable.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
+        vm.moviesDriven.driver.drive(historyView.historyTable.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
             cell.secondTeamLabel.text = element.title
         }
         .disposed(by: disposeBag)

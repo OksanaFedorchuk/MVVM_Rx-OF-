@@ -8,14 +8,14 @@
 import RxSwift
 import RxCocoa
 
-final class ReposViewModel {
+final class SearchViewModel {
     // Inputs
     let selectedIndexSubject = PublishSubject<IndexPath>()
     let searchQuerySubject = BehaviorRelay(value: "")
     let pageCounterSubject = BehaviorRelay(value: 1)
     
     // Outputs
-    var reposDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
+    var moviesDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
     var count = Int()
     var selectedMovie: Driver<MoviewViewModel>?
     
@@ -29,14 +29,14 @@ final class ReposViewModel {
         
         subscribeToSearch()
         bindSelected()
-        subscribeRepoSaving()
+        subscribeMovieSaving()
     }
     
     private func bindSelected() {
         self.selectedMovie = self.selectedIndexSubject
             .asObservable()
-            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> MoviewViewModel in
-                return repos[indexPath.item]
+            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
+                return movies[indexPath.item]
             }
             .asDriver(onErrorJustReturn: MoviewViewModel(id: 0,
                                                          title: "Movie Error",
@@ -44,11 +44,11 @@ final class ReposViewModel {
                                                          posterPath: ""))
     }
     
-    private func subscribeRepoSaving() {
+    private func subscribeMovieSaving() {
         selectedIndexSubject
             .asObserver()
-            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> MoviewViewModel in
-                return repos[indexPath.item]
+            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
+                return movies[indexPath.item]
             }
             .map{ Movie(movie: $0) }
             .bind { movie in
@@ -73,11 +73,11 @@ final class ReposViewModel {
                 
                 if self!.isNew {
                     //this method resets search results
-                    self?.reposDriven.accept(items)
+                    self?.moviesDriven.accept(items)
                     self?.isNew.toggle()
                 } else {
                     //this method adds up pages to search results
-                    self?.reposDriven.behavior.accept((self?.reposDriven.value())! + items)
+                    self?.moviesDriven.behavior.accept((self?.moviesDriven.value())! + items)
                 }
             })
             .disposed(by: disposeBag)

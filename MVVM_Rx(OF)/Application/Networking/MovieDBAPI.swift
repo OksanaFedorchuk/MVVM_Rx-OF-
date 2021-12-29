@@ -16,10 +16,10 @@ final class MovieDBAPI {
     //making api call for searched movies
     public func getMovie(withQuery query: String, for page: Int) -> Observable<[Response]> {
         //construct valid url for the given search text and page number
-        let url = setReposUlr(matching: query, page: "\(page)")
+        let url = setMoviesUlr(matching: query, page: "\(page)")
         let request = URLRequest(url: url)
         
-        return networkService.searchRepos(withQuery: query, for: request)
+        return networkService.searchCall(withQuery: query, for: request)
             .debug()
             .catch ({ [weak self] error in
                 return Observable
@@ -33,7 +33,7 @@ final class MovieDBAPI {
     }
     
     //building url for search call with static and varying parametes
-    private func setReposUlr(matching query: String,
+    private func setMoviesUlr(matching query: String,
                              page: String) -> URL {
         var components = URLComponents()
         components.scheme = "https"

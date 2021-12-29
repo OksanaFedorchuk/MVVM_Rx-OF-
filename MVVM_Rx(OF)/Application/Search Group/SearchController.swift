@@ -23,13 +23,13 @@ class SearchController: UIViewController {
     private let api = MovieDBAPI()
     private let disposeBag = DisposeBag()
     
-    let vm: ReposViewModel
+    let vm: SearchViewModel
     private var counter = 0
     private var pageNumber = 0
     
     // MARK: -  Inits
     
-    init(viewModel: ReposViewModel) {
+    init(viewModel: SearchViewModel) {
         self.vm = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -63,7 +63,7 @@ class SearchController: UIViewController {
     private func bindVM() {
         
         // -- tableview binding --
-        vm.reposDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
+        vm.moviesDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
             cell.secondTeamLabel.text = element.title
         }
         .disposed(by: disposeBag)
@@ -89,7 +89,7 @@ class SearchController: UIViewController {
             .disposed(by: disposeBag)
         
         // -- binding for number items --
-        vm.reposDriven.behavior
+        vm.moviesDriven.behavior
             .map { $0.count }
             .bind(onNext: { [weak self] num in
                 self?.counter = num

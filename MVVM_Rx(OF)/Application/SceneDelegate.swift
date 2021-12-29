@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         
-        let viewModel = ReposViewModel(networkingService: MovieDBAPI())
+        let viewModel = SearchViewModel(networkingService: MovieDBAPI())
         let viewController = SearchController(viewModel: viewModel)
         
         window.rootViewController = UINavigationController(rootViewController: viewController)

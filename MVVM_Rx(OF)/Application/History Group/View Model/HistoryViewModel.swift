@@ -13,26 +13,26 @@ final class HistoryViewModel {
     
     let selectedIndexSubject = PublishSubject<IndexPath>()
     
-    var reposDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
+    var moviesDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
     var selectedMovie: Driver<MoviewViewModel>?
     
     private let disposeBag = DisposeBag()
     
     init() {
-        subscriveToSavedRepos()
+        subscriveToSavedMovies()
         bindSelected()
     }
     
-    private func subscriveToSavedRepos() {
+    private func subscriveToSavedMovies() {
         UserDefaults.standard.rx
             .observe([Data].self, "movies")
             .map({ data -> [Movie] in
-                guard let repos = UserDefaults.standard.array(forKey: "movies") as? [Data] else {return []}
-                return repos.map { try! JSONDecoder().decode(Movie.self, from: $0) }
+                guard let movies = UserDefaults.standard.array(forKey: "movies") as? [Data] else {return []}
+                return movies.map { try! JSONDecoder().decode(Movie.self, from: $0) }
             })
             .map{ $0.map { MoviewViewModel(movie: $0)} }
-            .bind(onNext: { [weak self] repos in
-                self?.reposDriven.accept(repos)
+            .bind(onNext: { [weak self] movies in
+                self?.moviesDriven.accept(movies)
             })
             .disposed(by: disposeBag)
     }
@@ -40,8 +40,8 @@ final class HistoryViewModel {
     private func bindSelected() {
         self.selectedMovie = self.selectedIndexSubject
             .asObservable()
-            .withLatestFrom(reposDriven.behavior) { (indexPath, repos) -> MoviewViewModel in
-                return repos[indexPath.item]
+            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
+                return movies[indexPath.item]
             }
             .asDriver(onErrorJustReturn: MoviewViewModel(id: 0,
                                                          title: "Movie Error",

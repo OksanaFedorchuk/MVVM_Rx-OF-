@@ -11,8 +11,8 @@ import UIKit
 struct SavedMovies {
     static var savedMovies: [Movie] {
         get {
-            guard let repos = UserDefaults.standard.array(forKey: "movies") as? [Data] else {return []}
-            return repos.map { try! JSONDecoder().decode(Movie.self, from: $0) }
+            guard let movies = UserDefaults.standard.array(forKey: "movies") as? [Data] else {return []}
+            return movies.map { try! JSONDecoder().decode(Movie.self, from: $0) }
         }
         set {
             let data = newValue.map { try? JSONEncoder().encode($0)}
