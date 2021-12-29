@@ -25,9 +25,9 @@ final class HistoryViewModel {
     
     private func subscriveToSavedMovies() {
         UserDefaults.standard.rx
-            .observe([Data].self, "movies")
+            .observe([Data].self, K.defaultsName.movies)
             .map({ data -> [Movie] in
-                guard let movies = UserDefaults.standard.array(forKey: "movies") as? [Data] else {return []}
+                guard let movies = UserDefaults.standard.array(forKey: K.defaultsName.movies) as? [Data] else {return []}
                 return movies.map { try! JSONDecoder().decode(Movie.self, from: $0) }
             })
             .map{ $0.map { MoviewViewModel(movie: $0)} }
@@ -43,9 +43,6 @@ final class HistoryViewModel {
             .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
                 return movies[indexPath.item]
             }
-            .asDriver(onErrorJustReturn: MoviewViewModel(id: 0,
-                                                         title: "Movie Error",
-                                                         overview: "Was no able to get the selected movie",
-                                                         posterPath: ""))
+            .asDriver(onErrorJustReturn: MoviewViewModel())
     }
 }

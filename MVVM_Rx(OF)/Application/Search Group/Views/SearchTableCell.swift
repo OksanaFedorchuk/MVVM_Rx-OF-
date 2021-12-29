@@ -11,7 +11,7 @@ class SearchTableCell: UITableViewCell {
     
     // MARK: -  Properties
     
-    static let identifier = "SearchTableCell"
+    static let identifier = K.Identifier.searchTableCell
     
     let secondTeamLabel: UILabel = {
         let label = UILabel()

@@ -14,8 +14,8 @@
             filePath = "MVVM_Rx(OF)/Application/Search Group/View Model/SearchViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
             landmarkName = "subscribeToSearch()"
             landmarkType = "7">
          </BreakpointContent>

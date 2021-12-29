@@ -38,10 +38,7 @@ final class SearchViewModel {
             .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
                 return movies[indexPath.item]
             }
-            .asDriver(onErrorJustReturn: MoviewViewModel(id: 0,
-                                                         title: "Movie Error",
-                                                         overview: "Was no able to get the selected movie",
-                                                         posterPath: ""))
+            .asDriver(onErrorJustReturn: MoviewViewModel())
     }
     
     private func subscribeMovieSaving() {
@@ -106,25 +103,5 @@ final class SearchViewModel {
                     return (searchText: text, page: page)
                 }
             )
-    }
-}
-
-struct MoviewViewModel: Equatable {
-    let id: Int
-    let title: String
-    let overview: String
-    let posterPath: String
-    
-    var image: URL {
-        URL(string: "https://image.tmdb.org/t/p/w300/\(posterPath)")!
-    }
-}
-
-extension MoviewViewModel {
-    init(movie: Movie) {
-        self.id = movie.id
-        self.title = movie.title
-        self.overview = movie.overview
-        self.posterPath = movie.posterPath ?? "No Poster Available"
     }
 }

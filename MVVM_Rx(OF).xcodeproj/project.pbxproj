@@ -24,7 +24,8 @@
 		D0E2943F2771360C000C3C03 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2943E2771360C000C3C03 /* HistoryView.swift */; };
 		D0E2944127713685000C3C03 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2944027713685000C3C03 /* HistoryViewModel.swift */; };
 		D0E2944327722E2F000C3C03 /* SavedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2944227722E2F000C3C03 /* SavedMovies.swift */; };
-		D0E2944A277C6061000C3C03 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E29449277C6061000C3C03 /* K.swift */; };
+		D0E2944C277C671A000C3C03 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2944B277C671A000C3C03 /* K.swift */; };
+		D0E2944E277C68E3000C3C03 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E2944D277C68E3000C3C03 /* MovieViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +50,8 @@
 		D0E2943E2771360C000C3C03 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		D0E2944027713685000C3C03 /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		D0E2944227722E2F000C3C03 /* SavedMovies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedMovies.swift; sourceTree = "<group>"; };
-		D0E29449277C6061000C3C03 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = K.swift; path = ../../../../../K.swift; sourceTree = "<group>"; };
+		D0E2944B277C671A000C3C03 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
+		D0E2944D277C68E3000C3C03 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,7 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				D0E29438276FA6BF000C3C03 /* BehaviorDriver.swift */,
-				D0E29449277C6061000C3C03 /* K.swift */,
+				D0E2944B277C671A000C3C03 /* K.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -159,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				D02FB99F276DFD6C0031602E /* Movie.swift */,
+				D0E2944D277C68E3000C3C03 /* MovieViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -332,11 +335,12 @@
 				D02FB985276DE9CF0031602E /* SearchController.swift in Sources */,
 				D02FB9A0276DFD6C0031602E /* Movie.swift in Sources */,
 				D02FB981276DE9CF0031602E /* AppDelegate.swift in Sources */,
-				D0E2944A277C6061000C3C03 /* K.swift in Sources */,
+				D0E2944C277C671A000C3C03 /* K.swift in Sources */,
 				D0DA424C276E085B000EE7A7 /* NetworkService.swift in Sources */,
 				D0E2944327722E2F000C3C03 /* SavedMovies.swift in Sources */,
 				D0E2942D276E10B1000C3C03 /* MovieDBAPI.swift in Sources */,
 				D0E29431276E2E62000C3C03 /* SearchViewModel.swift in Sources */,
+				D0E2944E277C68E3000C3C03 /* MovieViewModel.swift in Sources */,
 				D0E2943D2770E861000C3C03 /* HistoryVC.swift in Sources */,
 				D0E2942F276E20CB000C3C03 /* SearchTableCell.swift in Sources */,
 				D0E2944127713685000C3C03 /* HistoryViewModel.swift in Sources */,
