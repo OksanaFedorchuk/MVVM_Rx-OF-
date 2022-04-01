@@ -9,6 +9,7 @@ import RxSwift
 import RxCocoa
 
 final class SearchViewModel {
+    
     // Inputs
     let selectedIndexSubject = PublishSubject<IndexPath>()
     let searchQuerySubject = BehaviorRelay(value: "")
@@ -63,7 +64,7 @@ final class SearchViewModel {
             }
             .map({ [weak self] response -> [Movie] in
                 self?.count = response[0].totalPages
-                return response[0].movies
+                return response[0].movies ?? []
             })
             .map { $0.map { MoviewViewModel(movie: $0)} }
             .bind(onNext: { [weak self] items in
@@ -91,13 +92,11 @@ final class SearchViewModel {
             .combineLatest(
                 searchQuerySubject
                     .asObservable()
-                    .filter { str in
-                        str.count > 2
-                    }
                     .throttle(RxTimeInterval.milliseconds(500), scheduler: MainScheduler.instance)
                     .distinctUntilChanged(),
                 pageCounterSubject
                     .asObservable()
+                    .throttle(RxTimeInterval.milliseconds(500), scheduler: MainScheduler.instance)
                     .distinctUntilChanged(),
                 resultSelector: { [weak self] (text, page) -> (searchText: String, page: Int) in
                     return (searchText: text, page: page)

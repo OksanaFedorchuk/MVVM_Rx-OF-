@@ -11,8 +11,10 @@ import RxCocoa
 
 final class HistoryViewModel {
     
+    //inputs
     let selectedIndexSubject = PublishSubject<IndexPath>()
     
+    //outputs
     var moviesDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
     var selectedMovie: Driver<MoviewViewModel>?
     

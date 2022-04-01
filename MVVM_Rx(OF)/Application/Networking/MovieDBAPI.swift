@@ -23,11 +23,8 @@ final class MovieDBAPI {
             .debug()
             .catch ({ [weak self] error in
                 return Observable
-                    .just([Response.init(totalPages: 1,
-                                         movies: [Movie(id: 1213,
-                                                        title: "Movie Title",
-                                                        overview: "Moview overview",
-                                                        posterPath: "")])
+                    .just([Response.init(totalPages: 0,
+                                         movies: [])
                           ])
             })
     }

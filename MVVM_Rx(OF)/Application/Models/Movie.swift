@@ -9,7 +9,7 @@ import Foundation
 
 struct Response: Codable {
     let totalPages: Int
-    let movies: [Movie]
+    let movies: [Movie]?
     
     enum CodingKeys: String, CodingKey {
         case totalPages = "total_pages"
