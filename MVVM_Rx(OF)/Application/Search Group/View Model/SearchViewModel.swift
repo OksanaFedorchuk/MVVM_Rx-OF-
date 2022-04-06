@@ -61,11 +61,19 @@ final class SearchViewModel {
             .asObservable()
             .flatMapLatest { searchStr, pageNum in
                 self.networkingService.getMovie(withQuery: searchStr, for: pageNum)
+                    .catch { [weak self] error in
+                        // TODO: display error on placeholder text
+                        print("Error url : \(error.localizedDescription)")
+                        return Observable
+                            .just([Response.init(totalPages: 0,
+                                                 movies: [])
+                            ])
+                    }
             }
-            .map({ [weak self] response -> [Movie] in
+            .map { [weak self] response -> [Movie] in
                 self?.count = response[0].totalPages
                 return response[0].movies ?? []
-            })
+            }
             .map { $0.map { MoviewViewModel(movie: $0)} }
             .bind(onNext: { [weak self] items in
                 

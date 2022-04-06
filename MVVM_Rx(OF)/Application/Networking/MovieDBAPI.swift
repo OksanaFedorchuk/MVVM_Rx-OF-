@@ -19,14 +19,8 @@ final class MovieDBAPI {
         let url = setMoviesUlr(matching: query, page: "\(page)")
         let request = URLRequest(url: url)
         
-        return networkService.searchCall(withQuery: query, for: request)
+        return networkService.apiCall(for: request)
             .debug()
-            .catch ({ [weak self] error in
-                return Observable
-                    .just([Response.init(totalPages: 0,
-                                         movies: [])
-                          ])
-            })
     }
     
     //building url for search call with static and varying parametes

@@ -24,9 +24,9 @@ class SearchView: UIView {
     }()
     
     public var searchBar: UISearchBar = {
-        let sb = UISearchBar()
-        sb.translatesAutoresizingMaskIntoConstraints = false
-        return sb
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        return searchBar
     }()
     
     // MARK: -  Initialization

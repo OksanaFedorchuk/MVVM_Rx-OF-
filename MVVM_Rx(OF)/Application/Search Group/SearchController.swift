@@ -78,9 +78,13 @@ class SearchController: UIViewController {
         searchView.tableView.rx
             .willDisplayCell
             .subscribe(onNext: { [weak self] cell, indexPath in
-                if indexPath.row == (self!.counter - 2) {
-                    guard let strongSelf = self else {return}
+                
+                guard let strongSelf = self else {return}
+                
+                if indexPath.row == (strongSelf.counter - 2) {
+                    
                     strongSelf.vm.pageCounterSubject.accept(strongSelf.pageNumber)
+                    
                     if strongSelf.vm.count > strongSelf.pageNumber {
                         strongSelf.pageNumber += 1
                     }

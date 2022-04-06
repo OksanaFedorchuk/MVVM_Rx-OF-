@@ -11,7 +11,7 @@ import RxCocoa
 
 final class NetworkService {
     
-    func searchCall<T: Decodable>(withQuery query: String, for urlRequest: URLRequest) -> Observable<[T]> {
+    func apiCall<T: Decodable>(for urlRequest: URLRequest) -> Observable<[T]> {
         return URLSession.shared.rx.data(request: urlRequest)
             .map { data -> [T] in
                 guard let response = try? JSONDecoder().decode(T.self, from: data) else { return [] }
