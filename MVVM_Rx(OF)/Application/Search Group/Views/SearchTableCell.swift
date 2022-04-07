@@ -13,6 +13,13 @@ class SearchTableCell: UITableViewCell {
     
     static let identifier = K.Identifier.searchTableCell
     
+    let container: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .lightGray
+        return view
+    }()
+    
     let secondTeamLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -22,12 +29,20 @@ class SearchTableCell: UITableViewCell {
         return label
     }()
     
+    let image: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.layer.cornerRadius = 10
+        return image
+    }()
+    
     // MARK: - Inits
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(secondTeamLabel)
-        
+        contentView.addSubview(container)
+        container.addSubview(image)
+        container.addSubview(secondTeamLabel)
         setConstraints()
     }
     
@@ -44,10 +59,22 @@ class SearchTableCell: UITableViewCell {
     private func setConstraints() {
         NSLayoutConstraint.activate([
             contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
-            secondTeamLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            secondTeamLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            secondTeamLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            secondTeamLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            container.topAnchor.constraint(equalTo: contentView.topAnchor),
+            container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            container.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            image.heightAnchor.constraint(equalToConstant: 60),
+            image.widthAnchor.constraint(equalToConstant: 60),
+            image.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            image.topAnchor.constraint(equalTo: container.topAnchor),
+            image.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            image.bottomAnchor.constraint(equalTo: secondTeamLabel.topAnchor),
+            
+            secondTeamLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            secondTeamLabel.heightAnchor.constraint(equalToConstant: 50),
+            secondTeamLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            secondTeamLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor),
         ])
     }
 }

@@ -14,7 +14,7 @@ final class MovieDBAPI {
     private let networkService = NetworkService()
     
     //making api call for searched movies
-    public func getMovie(withQuery query: String, for page: Int) -> Observable<[Response]> {
+    public func getMovie(withQuery query: String, for page: Int) -> Observable<[MoviesResult]> {
         //construct valid url for the given search text and page number
         let url = setMoviesUlr(matching: query, page: "\(page)")
         let request = URLRequest(url: url)
@@ -25,7 +25,7 @@ final class MovieDBAPI {
     
     //building url for search call with static and varying parametes
     private func setMoviesUlr(matching query: String,
-                             page: String) -> URL {
+                              page: String) -> URL {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.themoviedb.org"

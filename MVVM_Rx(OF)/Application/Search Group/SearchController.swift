@@ -63,8 +63,21 @@ class SearchController: UIViewController {
     private func bindVM() {
         
         // -- tableview binding --
-        vm.moviesDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
+        vm.moviesDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { [self] (row, element, cell) in
             cell.secondTeamLabel.text = element.title
+            
+            URLSession.shared.rx
+                .response(request: URLRequest(url: element.imageURL))
+            // subscribe on main thread
+                .subscribe(on: MainScheduler.asyncInstance)
+                .subscribe(onNext: { [weak self] data in
+                    // Update Image
+                    DispatchQueue.main.async {
+                        cell.image.image = UIImage(data: data.data)
+                    }
+                }, onError: {_ in
+                    // Log error
+                }).disposed(by: disposeBag)
         }
         .disposed(by: disposeBag)
         

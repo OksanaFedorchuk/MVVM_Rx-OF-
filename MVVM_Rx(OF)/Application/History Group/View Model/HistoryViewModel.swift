@@ -15,8 +15,8 @@ final class HistoryViewModel {
     let selectedIndexSubject = PublishSubject<IndexPath>()
     
     //outputs
-    var moviesDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
-    var selectedMovie: Driver<MoviewViewModel>?
+    var moviesDriven = BehaviorDriver<[Movie]>(value: [])
+    var selectedMovie: Driver<Movie>?
     
     private let disposeBag = DisposeBag()
     
@@ -32,7 +32,6 @@ final class HistoryViewModel {
                 guard let movies = UserDefaults.standard.array(forKey: K.defaultsName.movies) as? [Data] else {return []}
                 return movies.map { try! JSONDecoder().decode(Movie.self, from: $0) }
             })
-            .map{ $0.map { MoviewViewModel(movie: $0)} }
             .bind(onNext: { [weak self] movies in
                 self?.moviesDriven.accept(movies)
             })
@@ -42,9 +41,9 @@ final class HistoryViewModel {
     private func bindSelected() {
         self.selectedMovie = self.selectedIndexSubject
             .asObservable()
-            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
+            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> Movie in
                 return movies[indexPath.item]
             }
-            .asDriver(onErrorJustReturn: MoviewViewModel())
+            .asDriver(onErrorJustReturn: Movie())
     }
 }

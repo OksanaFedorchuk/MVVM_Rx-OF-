@@ -16,9 +16,9 @@ final class SearchViewModel {
     let pageCounterSubject = BehaviorRelay(value: 1)
     
     // Outputs
-    var moviesDriven = BehaviorDriver<[MoviewViewModel]>(value: [])
+    var moviesDriven = BehaviorDriver<[Movie]>(value: [])
     var count = Int()
-    var selectedMovie: Driver<MoviewViewModel>?
+    var selectedMovie: Driver<Movie>?
     
     private let networkingService: MovieDBAPI
     private let disposeBag = DisposeBag()
@@ -36,19 +36,18 @@ final class SearchViewModel {
     private func bindSelected() {
         self.selectedMovie = self.selectedIndexSubject
             .asObservable()
-            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
+            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> Movie in
                 return movies[indexPath.item]
             }
-            .asDriver(onErrorJustReturn: MoviewViewModel())
+            .asDriver(onErrorJustReturn: Movie())
     }
     
     private func subscribeMovieSaving() {
         selectedIndexSubject
             .asObserver()
-            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> MoviewViewModel in
+            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> Movie in
                 return movies[indexPath.item]
             }
-            .map{ Movie(movie: $0) }
             .bind { movie in
                 SavedMovies.savedMovies.append(movie)
             }
@@ -65,8 +64,8 @@ final class SearchViewModel {
                         // TODO: display error on placeholder text
                         print("Error url : \(error.localizedDescription)")
                         return Observable
-                            .just([Response.init(totalPages: 0,
-                                                 movies: [])
+                            .just([MoviesResult.init(totalPages: 0,
+                                                     movies: [])
                             ])
                     }
             }
@@ -74,7 +73,6 @@ final class SearchViewModel {
                 self?.count = response[0].totalPages
                 return response[0].movies ?? []
             }
-            .map { $0.map { MoviewViewModel(movie: $0)} }
             .bind(onNext: { [weak self] items in
                 
                 if self!.isNew {
