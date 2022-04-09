@@ -14,5 +14,12 @@ struct K {
         static let starGray = "starGray"
         static let ratingGray = "ratingGray"
         static let arrowGray = "arrowGray"
+        static let brightBlue = "brightBlue"
+        static let lightGrayDetails = "lightGrayDetails"
+    }
+    
+    struct Icons {
+        static let starIcon = "starIcon"
+        static let shareIcon = "shareIcon"
     }
 }
