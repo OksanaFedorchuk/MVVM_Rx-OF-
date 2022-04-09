@@ -13,24 +13,20 @@ class SearchController: UIViewController {
     
     // MARK: -  Properties
     
-    private lazy var historyButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: UIImage(systemName: "clock.arrow.circlepath"), style: .plain, target: self, action: #selector(didTapHistory))
-        button.tintColor = UIColor.blue
-        return button
-    }()
-    
     private let searchView = SearchView()
     private let api = MovieDBAPI()
     private let disposeBag = DisposeBag()
     
     let vm: SearchViewModel
+    let coordinator: MainCoordinator
     private var counter = 0
     private var pageNumber = 0
     
     // MARK: -  Inits
     
-    init(viewModel: SearchViewModel) {
+    init(viewModel: SearchViewModel, coordinator: MainCoordinator) {
         self.vm = viewModel
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,9 +51,8 @@ class SearchController: UIViewController {
         searchView.frame = view.bounds
         view.backgroundColor = .cyan
         
-        title = "MovieDB Search"
+        title = "Search"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.setRightBarButton(historyButton, animated: false)
     }
     
     private func bindVM() {
@@ -125,16 +120,8 @@ class SearchController: UIViewController {
         // -- Showing alert with movie --
         vm.selectedMovie?
             .drive(onNext: { [weak self] movie in
-                guard let strongSelf = self else { return }
-                let alertController = UIAlertController(title: "\(movie.title)", message: nil, preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-                strongSelf.present(alertController, animated: true, completion: nil)
+                self?.coordinator.presentDetails(for: movie)
             })
             .disposed(by: disposeBag)
-    }
-    
-    @objc private func didTapHistory() {
-        let historyVC = DetailsController()
-        navigationController?.pushViewController(historyVC, animated: true)
     }
 }
