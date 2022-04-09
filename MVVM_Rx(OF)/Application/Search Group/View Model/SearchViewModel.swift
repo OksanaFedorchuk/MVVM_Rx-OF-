@@ -30,7 +30,6 @@ final class SearchViewModel {
         
         subscribeToSearch()
         bindSelected()
-        subscribeMovieSaving()
     }
     
     private func bindSelected() {
@@ -40,18 +39,6 @@ final class SearchViewModel {
                 return movies[indexPath.item]
             }
             .asDriver(onErrorJustReturn: Movie())
-    }
-    
-    private func subscribeMovieSaving() {
-        selectedIndexSubject
-            .asObserver()
-            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> Movie in
-                return movies[indexPath.item]
-            }
-            .bind { movie in
-                SavedMovies.savedMovies.append(movie)
-            }
-            .disposed(by: disposeBag)
     }
     
     private func subscribeToSearch() {

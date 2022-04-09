@@ -9,11 +9,10 @@ import Foundation
 
 struct K {
     
-    struct defaultsName {
-        static let movies = "movies"
-    }
-    
-    struct Identifier {
-        static let searchTableCell = "SearchTableCell"
+    struct Colors {
+        static let myLightGray = "myLightGray"
+        static let starGray = "starGray"
+        static let ratingGray = "ratingGray"
+        static let arrowGray = "arrowGray"
     }
 }

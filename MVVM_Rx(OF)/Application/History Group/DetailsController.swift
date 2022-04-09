@@ -1,5 +1,5 @@
 //
-//  HistoryVC.swift
+//  DetailsController.swift
 //  MVVM_Rx(OF)
 //
 //  Created by MacBook Air on 20.12.2021.
@@ -9,10 +9,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class HistoryVC: UIViewController {
+class DetailsController: UIViewController {
     
-    private let historyView = HistoryView()
-    private let vm = HistoryViewModel()
+    private let historyView = DetailsView()
+    private let vm = DetailsViewModel()
     private let disposeBag = DisposeBag()
     
     // MARK: -  Inits
@@ -47,7 +47,7 @@ class HistoryVC: UIViewController {
     private func bindVM() {
         // -- tableview binding --
         vm.moviesDriven.driver.drive(historyView.historyTable.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
-            cell.secondTeamLabel.text = element.title
+            cell.movieTitleLabel.text = element.title
         }
         .disposed(by: disposeBag)
         

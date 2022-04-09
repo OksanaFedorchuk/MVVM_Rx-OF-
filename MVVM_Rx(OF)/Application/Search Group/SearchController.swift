@@ -64,14 +64,15 @@ class SearchController: UIViewController {
         
         // -- tableview binding --
         vm.moviesDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { [self] (row, element, cell) in
-            cell.secondTeamLabel.text = element.title
-            
+            cell.movieTitleLabel.text = element.title
+            cell.ratingLabel.text = "\(element.voteAverage)"
             URLSession.shared.rx
                 .response(request: URLRequest(url: element.imageURL))
             // subscribe on main thread
                 .subscribe(on: MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] data in
                     // Update Image
+                    
                     DispatchQueue.main.async {
                         cell.image.image = UIImage(data: data.data)
                     }
@@ -133,7 +134,7 @@ class SearchController: UIViewController {
     }
     
     @objc private func didTapHistory() {
-        let historyVC = HistoryVC()
+        let historyVC = DetailsController()
         navigationController?.pushViewController(historyVC, animated: true)
     }
 }

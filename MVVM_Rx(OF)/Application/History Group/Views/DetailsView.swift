@@ -1,5 +1,5 @@
 //
-//  HistoryView.swift
+//  DetailsView.swift
 //  MVVM_Rx(OF)
 //
 //  Created by MacBook Air on 21.12.2021.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class HistoryView: UIView {
+class DetailsView: UIView {
     
     public var historyTable: UITableView = {
         let table = UITableView()
