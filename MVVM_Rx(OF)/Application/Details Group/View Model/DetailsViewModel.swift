@@ -15,21 +15,11 @@ final class DetailsViewModel {
     var selected: Movie?
     
     //outputs
-    var selectedMovieReviews: Driver<MovieReviewsResult>?
+    var selectedMovieReviews: Driver<[MovieReviewsResult]>?
     
     private let disposeBag = DisposeBag()
     
     init(selected: Movie) {
         self.selected = selected
-        bindSelected()
-    }
-    
-    private func bindSelected() {
-//        self.selectedMovie = self.selectedIndexSubject
-//            .asObservable()
-//            .withLatestFrom(moviesDriven.behavior) { (indexPath, movies) -> Movie in
-//                return movies[indexPath.item]
-//            }
-//            .asDriver(onErrorJustReturn: Movie())
     }
 }

@@ -32,6 +32,11 @@ extension Review: Equatable {
     }
 }
 
+extension Review: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
 
 // MARK: - AuthorDetails
 

@@ -33,7 +33,6 @@ class DetailsController: UIViewController {
         
         setupUI()
         bindVM()
-        bindAlertOnTap()
     }
     
     private func setupUI() {
@@ -44,34 +43,9 @@ class DetailsController: UIViewController {
     }
     
     private func bindVM() {
-        // -- tableview binding --
-//        vm.moviesDriven.driver.drive(historyView.detailsTable.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { (row, element, cell) in
-//            cell.movieTitleLabel.text = element.title
-//        }
-//        .disposed(by: disposeBag)
-        
-//        //selected index binding
-//        historyView.detailsTable.rx.itemSelected
-//            .asObservable()
-//            .bind(to: vm.selectedIndexSubject)
-//            .disposed(by: disposeBag)
-        
-//        // -- binding to selected cell in tableview --
-//        historyView.detailsTable.rx.itemSelected
-//            .asObservable()
-//            .bind(to: vm.selectedIndexSubject)
-//            .disposed(by: disposeBag)
-    }
-    
-    private func bindAlertOnTap() {
-        // -- Showing alert with movie --
-//        vm.selectedMovie?
-//            .drive(onNext: { [weak self] movie in
-//                guard let strongSelf = self else { return }
-//                let alertController = UIAlertController(title: "\(movie.title)", message: nil, preferredStyle: .alert)
-//                alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-//                strongSelf.present(alertController, animated: true, completion: nil)
-//            })
-//            .disposed(by: disposeBag)
+        //         -- tableview binding --
+        vm.selectedMovieReviews?.drive(historyView.detailsTable.rx.items(cellIdentifier: DetailsTableCell.identifier, cellType: DetailsTableCell.self)) { (row, element, cell) in
+        }
+        .disposed(by: disposeBag)
     }
 }
