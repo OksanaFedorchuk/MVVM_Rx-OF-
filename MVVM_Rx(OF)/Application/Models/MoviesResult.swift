@@ -16,7 +16,6 @@ struct MoviesResult: Codable {
 }
 
 
-
 // MARK: - Movie
 
 struct Movie: Codable {
@@ -30,6 +29,15 @@ struct Movie: Codable {
     
     var imageURL: URL {
         URL(string: "https://image.tmdb.org/t/p/w300/\(posterPath ?? "")")!
+    }
+}
+
+
+// MARK: - Movie Equatable
+
+extension Movie: Equatable {
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

@@ -4,7 +4,7 @@
 //
 //  Created by MacBook Air on 18.12.2021.
 //
-// TODO: add colors, text colors, star, arrow button
+
 import UIKit
 
 class SearchTableCell: UITableViewCell {
@@ -15,7 +15,7 @@ class SearchTableCell: UITableViewCell {
     
     // MARK: - Subviews
     
-    let mainContainer: UIView = {
+    private let mainContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(named: K.Colors.myLightGray)
@@ -23,7 +23,7 @@ class SearchTableCell: UITableViewCell {
         return view
     }()
     
-    let hStack: UIStackView = {
+    private let hStack: UIStackView = {
         let hStack = UIStackView()
         hStack.translatesAutoresizingMaskIntoConstraints = false
         hStack.axis = .horizontal
@@ -33,7 +33,7 @@ class SearchTableCell: UITableViewCell {
         return hStack
     }()
     
-    let vStack: UIStackView = {
+    private let vStack: UIStackView = {
         let vStack = UIStackView()
         vStack.translatesAutoresizingMaskIntoConstraints = false
         vStack.axis = .vertical
@@ -72,7 +72,7 @@ class SearchTableCell: UITableViewCell {
         return image
     }()
     
-    let starImage: UIImageView = {
+    private let starImage: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(systemName: "star")
@@ -80,7 +80,7 @@ class SearchTableCell: UITableViewCell {
         return image
     }()
     
-    let arrowButton: UIButton = {
+    private let arrowButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "chevron.right"), for: .normal)

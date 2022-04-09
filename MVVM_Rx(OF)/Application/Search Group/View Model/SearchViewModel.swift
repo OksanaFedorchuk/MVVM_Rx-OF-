@@ -49,7 +49,7 @@ final class SearchViewModel {
                 self.networkingService.getMovie(withQuery: searchStr, for: pageNum)
                     .catch { [weak self] error in
                         // TODO: display error on placeholder text
-                        print("Error url : \(error.localizedDescription)")
+                        print("MYDEBUG Error publishTextAndPage url : \(error.localizedDescription)")
                         return Observable
                             .just([MoviesResult.init(totalPages: 0,
                                                      movies: [])
@@ -61,21 +61,24 @@ final class SearchViewModel {
                 return response[0].movies ?? []
             }
             .bind(onNext: { [weak self] items in
-                
-                if self!.isNew {
+                guard let self = self else { return }
+                let sortedItems = items.sorted { $0.voteAverage > $1.voteAverage }
+                if self.isNew {
                     //this method resets search results
-                    self?.moviesDriven.accept(items)
-                    self?.isNew.toggle()
+                    self.moviesDriven.accept(sortedItems)
+                    self.isNew.toggle()
                 } else {
                     //this method adds up pages to search results
-                    self?.moviesDriven.behavior.accept((self?.moviesDriven.value())! + items)
+                    if self.moviesDriven.value() != sortedItems {
+                        self.moviesDriven.behavior.accept((self.moviesDriven.value()) + sortedItems)
+                    }
                 }
             })
             .disposed(by: disposeBag)
         
         searchQuerySubject.asObservable()
-            .bind { _ in
-                self.isNew.toggle()
+            .bind { [weak self] _ in
+                self?.isNew.toggle()
             }
             .disposed(by: disposeBag)
     }
