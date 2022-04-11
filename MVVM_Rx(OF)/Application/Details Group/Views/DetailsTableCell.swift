@@ -115,7 +115,7 @@ class DetailsTableCell: UITableViewCell {
     private func setConstraints() {
         
         NSLayoutConstraint.activate([
-            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 110),
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80),
             
             hStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             hStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 9),

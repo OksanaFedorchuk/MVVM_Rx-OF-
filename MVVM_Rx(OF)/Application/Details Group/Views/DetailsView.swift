@@ -128,9 +128,8 @@ class DetailsView: UIView {
         return button
     }()
     
-    public var detailsTable: UITableView = {
-        let table = UITableView()
-        table.backgroundColor = .systemBlue
+    public var detailsTable: DynamicHeightTable = {
+        let table = DynamicHeightTable()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(DetailsTableCell.self, forCellReuseIdentifier: DetailsTableCell.identifier)
         return table
@@ -207,7 +206,7 @@ class DetailsView: UIView {
             topContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             topContainer.topAnchor.constraint(equalTo: topAnchor),
             topContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.35),
+            topContainer.heightAnchor.constraint(equalToConstant: 300),
             
             image.leadingAnchor.constraint(equalTo: topContainer.leadingAnchor),
             image.topAnchor.constraint(equalTo: topContainer.topAnchor),
@@ -243,11 +242,11 @@ class DetailsView: UIView {
             detailsTable.topAnchor.constraint(equalTo: bottomStack.bottomAnchor, constant: 10),
             detailsTable.trailingAnchor.constraint(equalTo: bottomContainer.trailingAnchor, constant: -20),
             detailsTable.bottomAnchor.constraint(equalTo: shareButton.topAnchor, constant: -20),
-            detailsTable.heightAnchor.constraint(equalToConstant: 300),
             
             //share button
             shareButton.leadingAnchor.constraint(equalTo: bottomContainer.leadingAnchor, constant: 20),
             shareButton.heightAnchor.constraint(equalToConstant: 50),
+            shareButton.topAnchor.constraint(equalTo: detailsTable.bottomAnchor),
             shareButton.trailingAnchor.constraint(equalTo: bottomContainer.trailingAnchor, constant: -20),
             shareButton.bottomAnchor.constraint(lessThanOrEqualTo: bottomContainer.bottomAnchor, constant: -20)
         ])

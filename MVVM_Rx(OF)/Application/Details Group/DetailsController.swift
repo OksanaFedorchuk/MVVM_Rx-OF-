@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class DetailsController: UIViewController {
+class DetailsController: UIViewController, UIScrollViewDelegate {
     
     private var detailsView = DetailsView()
     private let vm: DetailsViewModel
@@ -28,6 +28,10 @@ class DetailsController: UIViewController {
     
     // MARK: -  Lifecycle
     
+    override func loadView() {
+        setupScroll()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         detailsView.configure(with: vm.movie ?? Movie())
@@ -35,13 +39,40 @@ class DetailsController: UIViewController {
         bindVM()
     }
     
+    // MARK: - Private methods
+    
     private func setupUI() {
-        view.addSubview(detailsView)
-        detailsView.frame = view.bounds
         view.backgroundColor = .white
         
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = UIColor.white
+        navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.barStyle = .black
+    }
+    
+    private func setupScroll() {
+        view = UIView()
+        let scrollView = UIScrollView()
+        scrollView.delegate = self
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        detailsView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(detailsView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: -150),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            detailsView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            detailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            detailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            detailsView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            detailsView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+        ])
     }
     
     private func bindVM() {

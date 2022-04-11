@@ -28,7 +28,7 @@ struct ProductionCompany: Codable {
 }
 
 
-// MARK: - Empty MovieReviewsResult
+// MARK: - Empty MovieDetailsResult
 
 extension MovieDetailsResult {
     init() {

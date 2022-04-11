@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		10C9FEDC2801E0C400DED90A /* DetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C9FEDB2801E0C400DED90A /* DetailsTableCell.swift */; };
 		10C9FEDE2801EC0D00DED90A /* UIView+AddSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C9FEDD2801EC0D00DED90A /* UIView+AddSubviews.swift */; };
+		10C9FEE02804682200DED90A /* DynamicHeightTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C9FEDF2804682200DED90A /* DynamicHeightTable.swift */; };
 		10FE3FA427FED97600B076EA /* MovieDetailsResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FE3FA327FED97600B076EA /* MovieDetailsResult.swift */; };
 		10FE3FAB27FF881A00B076EA /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FE3FAA27FF881A00B076EA /* MainCoordinator.swift */; };
 		10FE3FAD27FF890300B076EA /* Coordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10FE3FAC27FF890300B076EA /* Coordinating.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		10C9FEDB2801E0C400DED90A /* DetailsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsTableCell.swift; sourceTree = "<group>"; };
 		10C9FEDD2801EC0D00DED90A /* UIView+AddSubviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+AddSubviews.swift"; sourceTree = "<group>"; };
+		10C9FEDF2804682200DED90A /* DynamicHeightTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicHeightTable.swift; sourceTree = "<group>"; };
 		10FE3FA327FED97600B076EA /* MovieDetailsResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsResult.swift; sourceTree = "<group>"; };
 		10FE3FAA27FF881A00B076EA /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		10FE3FAC27FF890300B076EA /* Coordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinating.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 			children = (
 				D0E2943E2771360C000C3C03 /* DetailsView.swift */,
 				10C9FEDB2801E0C400DED90A /* DetailsTableCell.swift */,
+				10C9FEDF2804682200DED90A /* DynamicHeightTable.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				D0E2943D2770E861000C3C03 /* DetailsController.swift in Sources */,
 				D0E2942F276E20CB000C3C03 /* SearchTableCell.swift in Sources */,
 				D0E2944127713685000C3C03 /* DetailsViewModel.swift in Sources */,
+				10C9FEE02804682200DED90A /* DynamicHeightTable.swift in Sources */,
 				D02FB983276DE9CF0031602E /* SceneDelegate.swift in Sources */,
 				10C9FEDE2801EC0D00DED90A /* UIView+AddSubviews.swift in Sources */,
 			);
