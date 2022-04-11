@@ -11,7 +11,7 @@ import RxCocoa
 
 protocol MovieReceveable {
     func getMovie(withQuery query: String, for page: Int) -> Observable<[MoviesResult]>
-    func getMovieDetails(for movieID: Int) -> Observable<[MovieReviewsResult]>
+    func getMovieDetails(for movieID: Int) -> Observable<[MovieDetailsResult]>
 }
 
 final class MovieDBAPI {
@@ -52,7 +52,7 @@ extension MovieDBAPI: MovieReceveable {
             .debug()
     }
     
-    func getMovieDetails(for movieID: Int) -> Observable<[MovieReviewsResult]> {
+    func getMovieDetails(for movieID: Int) -> Observable<[MovieDetailsResult]> {
         let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)?api_key=b5977e527a6e071133ebf0f33054db08")
         ?? URL(string: "https://api.github.com/zen")!
         

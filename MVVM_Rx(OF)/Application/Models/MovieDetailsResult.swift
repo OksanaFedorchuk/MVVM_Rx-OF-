@@ -1,5 +1,5 @@
 //
-//  MovieReviewsResult.swift
+//  MovieDetailsResult.swift
 //  MVVM_Rx(OF)
 //
 //  Created by Oksana Fedorchuk on 07.04.2022.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-// MARK: - MovieReviewsResult
+// MARK: - MovieDetailsResult
 
-struct MovieReviewsResult: Codable {
+struct MovieDetailsResult: Codable {
     
     let id: Int
     let productionCompanies: [ProductionCompany]
@@ -30,7 +30,7 @@ struct ProductionCompany: Codable {
 
 // MARK: - Empty MovieReviewsResult
 
-extension MovieReviewsResult {
+extension MovieDetailsResult {
     init() {
         self.id = 0
         self.productionCompanies = []
@@ -40,7 +40,7 @@ extension MovieReviewsResult {
 
 // MARK: - Coding Keys
 
-extension MovieReviewsResult {
+extension MovieDetailsResult {
     
     enum CodingKeys: String, CodingKey {
         case id
