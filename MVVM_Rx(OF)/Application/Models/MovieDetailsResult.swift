@@ -13,6 +13,7 @@ struct MovieDetailsResult: Codable {
     
     let id: Int
     let productionCompanies: [ProductionCompany]
+    let homepage: String
 }
 
 // MARK: - ProductionCompany
@@ -34,6 +35,7 @@ extension MovieDetailsResult {
     init() {
         self.id = 0
         self.productionCompanies = []
+        self.homepage = ""
     }
 }
 
@@ -45,6 +47,7 @@ extension MovieDetailsResult {
     enum CodingKeys: String, CodingKey {
         case id
         case productionCompanies = "production_companies"
+        case homepage
     }
 }
 

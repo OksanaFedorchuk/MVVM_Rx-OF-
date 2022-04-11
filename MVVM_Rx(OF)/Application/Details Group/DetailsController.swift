@@ -37,6 +37,7 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
         detailsView.configure(with: vm.movie ?? Movie())
         setupUI()
         bindVM()
+        setButtonTargets()
     }
     
     // MARK: - Private methods
@@ -75,9 +76,14 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
         ])
     }
     
+    private func setButtonTargets() {
+        //        detailsView.viewOnlineButton.addTarget(self, action: #selector(didTapViewOnline), for: .touchUpInside)
+        //        detailsView.shareButtonaddTarget(.self, action: #selector(didTapShare), for: .touchUpInside)
+    }
+    
     private func bindVM() {
         //         -- tableview binding --
-        vm.movieReviews.drive(detailsView.detailsTable.rx.items(cellIdentifier: DetailsTableCell.identifier, cellType: DetailsTableCell.self)) { (row, element, cell) in
+        vm.movieProductionCompanies.drive(detailsView.detailsTable.rx.items(cellIdentifier: DetailsTableCell.identifier, cellType: DetailsTableCell.self)) { (row, element, cell) in
             cell.configure(with: element)
             URLSession.shared.rx
                 .response(request: URLRequest(url: element.logoURL))
@@ -109,5 +115,20 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
             }, onError: {_ in
                 // Log error
             }).disposed(by: disposeBag)
+        
+        detailsView.viewOnlineButton.rx.tap.bind { [self] in
+            vm.getlink()
+            print("Tapped: \(vm.movieLink)")
+            if vm.movieLink == "" {
+                if let url = vm.movie?.posterURL {
+                    UIApplication.shared.open(url)
+                }
+            } else      {
+                if let url = URL(string: vm.movieLink) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
+        .disposed(by: disposeBag)
     }
 }

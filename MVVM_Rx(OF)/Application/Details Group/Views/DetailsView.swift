@@ -113,7 +113,7 @@ class DetailsView: UIView {
         return label
     }()
     
-    private let viewOnlineButton: UIButton = {
+    lazy var viewOnlineButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor(named: K.Colors.lightGrayDetails)
@@ -135,7 +135,7 @@ class DetailsView: UIView {
         return table
     }()
     
-    private let shareButton: UIButton = {
+    lazy var shareButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = UIColor(named: K.Colors.lightGrayDetails)
