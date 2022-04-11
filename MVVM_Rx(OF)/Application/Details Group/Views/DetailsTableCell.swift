@@ -20,20 +20,25 @@ class DetailsTableCell: UITableViewCell {
         let stack = UIStackView()
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
-        stack.distribution = .fill
+        stack.distribution = .fillProportionally
         return stack
     }()
     
-    private let numberLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = UIColor(named: K.Colors.ratingGray)
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.textAlignment = .center
-        label.textColor = .black
-        label.layer.cornerRadius = 25
-        label.text = "1"
-        return label
+    private let container: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+    
+    let image: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.layer.cornerRadius = 18
+        image.clipsToBounds = true
+        image.backgroundColor = UIColor(named: K.Colors.starGray)
+        image.contentMode = .scaleAspectFill
+        return image
     }()
     
     private let vStack: UIStackView = {
@@ -70,7 +75,7 @@ class DetailsTableCell: UITableViewCell {
     private let contentLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 22, weight: .regular)
+        label.font = .systemFont(ofSize: 17, weight: .regular)
         label.textAlignment = .left
         label.numberOfLines = 2
         label.textColor = UIColor(named: K.Colors.ratingGray)
@@ -83,6 +88,7 @@ class DetailsTableCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(hStack)
+        container.addSubview(image)
         setupHstack()
         setupVstack()
         setConstraints()
@@ -95,7 +101,9 @@ class DetailsTableCell: UITableViewCell {
     // MARK: - Layout methods
     
     private func setupHstack() {
-        hStack.addArrangedSubviews([numberLabel, vStack])
+        
+        hStack.addArrangedSubviews([container, vStack])
+        
     }
     
     private func setupVstack() {
@@ -114,8 +122,17 @@ class DetailsTableCell: UITableViewCell {
             hStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             hStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -9),
             
-            numberLabel.heightAnchor.constraint(equalToConstant: 36),
-            numberLabel.widthAnchor.constraint(equalToConstant: 36)
+            container.widthAnchor.constraint(equalToConstant: 45),
+            
+            image.heightAnchor.constraint(equalToConstant: 36),
+            image.widthAnchor.constraint(equalToConstant: 36),
+            image.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            image.centerYAnchor.constraint(equalTo: container.centerYAnchor)
         ])
+    }
+    
+    func configure(with company: ProductionCompany) {
+        authorNameLabel.text = company.name
+        contentLabel.text = company.originCountry
     }
 }

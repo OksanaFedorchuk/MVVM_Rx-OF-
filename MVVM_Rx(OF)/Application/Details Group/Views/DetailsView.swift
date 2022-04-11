@@ -30,7 +30,7 @@ class DetailsView: UIView {
     
     // MARK: - Top container subviews
     
-    private let image: UIImageView = {
+    let image: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.backgroundColor = UIColor(named: K.Colors.starGray)
@@ -53,9 +53,8 @@ class DetailsView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 28, weight: .bold)
         label.textAlignment = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         label.textColor = .white
-        label.text = "Mock Movie label Text"
         label.shadowColor = .black
         label.shadowOffset = CGSize(width: 0.3, height: 0.3)
         return label
@@ -67,7 +66,6 @@ class DetailsView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 1
         label.textColor = .white
-        label.text = "7.8"
         label.font = .systemFont(ofSize: 13, weight: .regular)
         label.alpha = 0.5
         label.shadowColor = .darkGray
@@ -95,14 +93,23 @@ class DetailsView: UIView {
         return stack
     }()
     
+    private let overviewTextLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 17, weight: .semibold)
+        label.textAlignment = .left
+        label.text = "Overview"
+        label.textColor = .black
+        return label
+    }()
+    
     private let overviewLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 13, weight: .regular)
+        label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textAlignment = .left
-        label.numberOfLines = 6
+        label.numberOfLines = 0
         label.textColor = UIColor(named: K.Colors.ratingGray)
-        label.text = "This is the overview to the movie selected by user. May be long, yeah"
         return label
     }()
     
@@ -123,7 +130,7 @@ class DetailsView: UIView {
     
     public var detailsTable: UITableView = {
         let table = UITableView()
-        table.backgroundColor = .white
+        table.backgroundColor = .systemBlue
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(DetailsTableCell.self, forCellReuseIdentifier: DetailsTableCell.identifier)
         return table
@@ -157,17 +164,13 @@ class DetailsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Layout methods
     
     private func addSubviews() {
         addSubview(topContainer)
         addSubview(bottomContainer)
-        topContainer.addSubview(topStack)
-        bottomContainer.addSubview(bottomStack)
-        bottomContainer.addSubview(detailsTable)
-        bottomContainer.addSubview(shareButton)
-        
+        topContainer.addSubviews([image, topStack])
+        bottomContainer.addSubviews([bottomStack, detailsTable, shareButton])
         setupTopStack()
         setupBottomStack()
     }
@@ -185,14 +188,13 @@ class DetailsView: UIView {
     }
     
     private func setupBottomStack() {
-        let hStack = UIStackView()
-        hStack.axis = .horizontal
-        hStack.spacing = 4
+        let vStack = UIStackView()
+        vStack.axis = .vertical
+        vStack.spacing = 4
         
-        hStack.addArrangedSubview(overviewLabel)
-        hStack.addArrangedSubview(viewOnlineButton)
+        vStack.addArrangedSubviews([overviewTextLabel, overviewLabel, viewOnlineButton])
         
-        bottomStack.addArrangedSubview(hStack)
+        bottomStack.addArrangedSubview(vStack)
     }
     
     
@@ -205,7 +207,12 @@ class DetailsView: UIView {
             topContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             topContainer.topAnchor.constraint(equalTo: topAnchor),
             topContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            topContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.35),
+            
+            image.leadingAnchor.constraint(equalTo: topContainer.leadingAnchor),
+            image.topAnchor.constraint(equalTo: topContainer.topAnchor),
+            image.trailingAnchor.constraint(equalTo: topContainer.trailingAnchor),
+            image.bottomAnchor.constraint(equalTo: topContainer.bottomAnchor),
             
             // stack containing titleLabel, starImage and ratingLabel
             topStack.leadingAnchor.constraint(equalTo: topContainer.leadingAnchor, constant: 20),
@@ -225,7 +232,7 @@ class DetailsView: UIView {
             bottomStack.leadingAnchor.constraint(equalTo: bottomContainer.leadingAnchor, constant: 20),
             bottomStack.topAnchor.constraint(equalTo: bottomContainer.topAnchor, constant: 21),
             bottomStack.trailingAnchor.constraint(equalTo: bottomContainer.trailingAnchor, constant: -20),
-            bottomStack.heightAnchor.constraint(equalToConstant: 200),
+            bottomStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 100),
             
             viewOnlineButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
             viewOnlineButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
@@ -233,15 +240,22 @@ class DetailsView: UIView {
             
             // table
             detailsTable.leadingAnchor.constraint(equalTo: bottomContainer.leadingAnchor, constant: 20),
-            detailsTable.topAnchor.constraint(equalTo: bottomStack.bottomAnchor),
+            detailsTable.topAnchor.constraint(equalTo: bottomStack.bottomAnchor, constant: 10),
             detailsTable.trailingAnchor.constraint(equalTo: bottomContainer.trailingAnchor, constant: -20),
-            detailsTable.bottomAnchor.constraint(equalTo: shareButton.topAnchor, constant: 20),
+            detailsTable.bottomAnchor.constraint(equalTo: shareButton.topAnchor, constant: -20),
+            detailsTable.heightAnchor.constraint(equalToConstant: 300),
             
             //share button
             shareButton.leadingAnchor.constraint(equalTo: bottomContainer.leadingAnchor, constant: 20),
             shareButton.heightAnchor.constraint(equalToConstant: 50),
             shareButton.trailingAnchor.constraint(equalTo: bottomContainer.trailingAnchor, constant: -20),
-            shareButton.bottomAnchor.constraint(equalTo: shareButton.topAnchor, constant: 20)
+            shareButton.bottomAnchor.constraint(lessThanOrEqualTo: bottomContainer.bottomAnchor, constant: -20)
         ])
+    }
+    
+    func configure(with movie: Movie) {
+        titleLabel.text = movie.title
+        ratingLabel.text = "\(movie.voteAverage)"
+        overviewLabel.text = movie.overview
     }
 }

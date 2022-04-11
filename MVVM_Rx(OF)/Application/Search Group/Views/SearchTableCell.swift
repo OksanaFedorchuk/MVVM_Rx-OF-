@@ -97,6 +97,7 @@ class SearchTableCell: UITableViewCell {
         setupHstack()
         setupvStack()
         setConstraints()
+        selectionStyle = .none
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -9,19 +9,14 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+protocol MovieReceveable {
+    func getMovie(withQuery query: String, for page: Int) -> Observable<[MoviesResult]>
+    func getMovieDetails(for movieID: Int) -> Observable<[MovieReviewsResult]>
+}
+
 final class MovieDBAPI {
     
     private let networkService = NetworkService()
-    
-    //making api call for searched movies
-    public func getMovie(withQuery query: String, for page: Int) -> Observable<[MoviesResult]> {
-        //construct valid url for the given search text and page number
-        let url = setMoviesUlr(matching: query, page: "\(page)")
-        let request = URLRequest(url: url)
-        
-        return networkService.apiCall(for: request)
-            .debug()
-    }
     
     //building url for search call with static and varying parametes
     private func setMoviesUlr(matching query: String,
@@ -37,8 +32,33 @@ final class MovieDBAPI {
             URLQueryItem(name: "query", value: query)
         ]
         
-        guard let url = components.url else {return URL(string: "https://api.github.com/zen")!}
+        guard let url = components.url else { return URL(string: "https://api.github.com/zen")! }
         print("MYDEBUG: url: \(String(describing: url.absoluteString))")
         return url
+    }
+}
+
+// MARK: - MovieReceveable
+
+extension MovieDBAPI: MovieReceveable {
+    //making api call for searched movies
+    func getMovie(withQuery query: String, for page: Int) -> Observable<[MoviesResult]> {
+        //construct valid url for the given search text and page number
+        let url = setMoviesUlr(matching: query, page: "\(page)")
+        let request = URLRequest(url: url)
+        
+        return networkService
+            .apiCall(for: request)
+            .debug()
+    }
+    
+    func getMovieDetails(for movieID: Int) -> Observable<[MovieReviewsResult]> {
+        let url = URL(string: "https://api.themoviedb.org/3/movie/\(movieID)?api_key=b5977e527a6e071133ebf0f33054db08")
+        ?? URL(string: "https://api.github.com/zen")!
+        
+        let request = URLRequest(url: url)
+        return networkService
+            .apiCall(for: request)
+            .debug()
     }
 }

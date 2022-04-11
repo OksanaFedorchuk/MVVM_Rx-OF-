@@ -20,13 +20,12 @@ final class SearchViewModel {
     var count = Int()
     var selectedMovie: Driver<Movie>?
     
-    private let networkingService: MovieDBAPI
+    private let networkingService = MovieDBAPI()
     private let disposeBag = DisposeBag()
     
     private var isNew = false
     
-    init(networkingService: MovieDBAPI) {
-        self.networkingService = networkingService
+    init() {
         
         subscribeToSearch()
         bindSelected()

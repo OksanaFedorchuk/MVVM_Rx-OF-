@@ -27,8 +27,12 @@ struct Movie: Codable {
     let posterPath: String?
     let voteAverage: Double
     
-    var imageURL: URL {
+    var posterURL: URL {
         URL(string: "https://image.tmdb.org/t/p/w300/\(posterPath ?? "")")!
+    }
+    
+    var backdropURL: URL {
+        URL(string: "https://image.tmdb.org/t/p/w300/\(backdropPath ?? "")")!
     }
 }
 

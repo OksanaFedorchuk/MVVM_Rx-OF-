@@ -11,44 +11,19 @@ import Foundation
 
 struct MovieReviewsResult: Codable {
     
-    let id, page: Int
-    let reviews: [Review]
-    let totalPages, totalResults: Int
+    let id: Int
+    let productionCompanies: [ProductionCompany]
 }
 
-
-// MARK: - Review
-
-struct Review: Codable {
-    let author: String
-    let authorDetails: AuthorDetails
-    let content, createdAt, id, updatedAt: String
-    let url: String
-}
-
-extension Review: Equatable {
-    static func == (lhs: Review, rhs: Review) -> Bool {
-        lhs.id == rhs.id
-    }
-}
-
-extension Review: Hashable {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
-// MARK: - AuthorDetails
-
-struct AuthorDetails: Codable {
-    let name, username: String
-    let avatarPath: String?
-    let rating: Int?
+// MARK: - ProductionCompany
+struct ProductionCompany: Codable {
     
-    enum CodingKeys: String, CodingKey {
-        case name, username
-        case avatarPath = "avatar_path"
-        case rating
+    let id: Int
+    let logoPath: String?
+    let name, originCountry: String
+    
+    var logoURL: URL {
+        URL(string: "https://image.tmdb.org/t/p/w300/\(logoPath ?? "")")!
     }
 }
 
@@ -58,10 +33,7 @@ struct AuthorDetails: Codable {
 extension MovieReviewsResult {
     init() {
         self.id = 0
-        self.page = 0
-        self.reviews = []
-        self.totalPages = 0
-        self.totalResults = 0
+        self.productionCompanies = []
     }
 }
 
@@ -71,22 +43,17 @@ extension MovieReviewsResult {
 extension MovieReviewsResult {
     
     enum CodingKeys: String, CodingKey {
-        case id, page
-        case reviews = "results"
-        case totalPages = "total_pages"
-        case totalResults = "total_results"
+        case id
+        case productionCompanies = "production_companies"
     }
 }
 
-extension Review {
+extension ProductionCompany {
     
     enum CodingKeys: String, CodingKey {
-        case author
-        case authorDetails = "author_details"
-        case content
-        case createdAt = "created_at"
         case id
-        case updatedAt = "updated_at"
-        case url
+        case logoPath = "logo_path"
+        case name
+        case originCountry = "origin_country"
     }
 }

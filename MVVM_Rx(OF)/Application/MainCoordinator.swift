@@ -16,13 +16,13 @@ class MainCoordinator: Coordinating {
     }
     
     func start() {
-        let viewModel = SearchViewModel(networkingService: MovieDBAPI())
+        let viewModel = SearchViewModel()
         let viewController = SearchController(viewModel: viewModel, coordinator: self)
         navigationController.pushViewController(viewController, animated: false)
     }
     
     func presentDetails(for movie: Movie) {
-        let viewModel = DetailsViewModel(selected: movie)
+        let viewModel = DetailsViewModel(movie: movie)
         let viewController = DetailsController(vm: viewModel)
         navigationController.pushViewController(viewController, animated: false)
     }

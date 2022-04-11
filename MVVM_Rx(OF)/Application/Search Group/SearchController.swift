@@ -53,6 +53,7 @@ class SearchController: UIViewController {
         
         title = "Search"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.barStyle = .default
     }
     
     private func bindVM() {
@@ -62,7 +63,7 @@ class SearchController: UIViewController {
             cell.movieTitleLabel.text = element.title
             cell.ratingLabel.text = "\(element.voteAverage)"
             URLSession.shared.rx
-                .response(request: URLRequest(url: element.imageURL))
+                .response(request: URLRequest(url: element.posterURL))
             // subscribe on main thread
                 .subscribe(on: MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] data in
