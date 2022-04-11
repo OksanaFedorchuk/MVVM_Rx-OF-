@@ -37,10 +37,9 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
         detailsView.configure(with: vm.movie ?? Movie())
         setupUI()
         bindVM()
-        setButtonTargets()
     }
     
-    // MARK: - Private methods
+    // MARK: - Layout methods
     
     private func setupUI() {
         view.backgroundColor = .white
@@ -76,10 +75,7 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
         ])
     }
     
-    private func setButtonTargets() {
-        //        detailsView.viewOnlineButton.addTarget(self, action: #selector(didTapViewOnline), for: .touchUpInside)
-        //        detailsView.shareButtonaddTarget(.self, action: #selector(didTapShare), for: .touchUpInside)
-    }
+    // MARK: - VM binding
     
     private func bindVM() {
         //         -- tableview binding --
@@ -116,17 +112,31 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
                 // Log error
             }).disposed(by: disposeBag)
         
-        detailsView.viewOnlineButton.rx.tap.bind { [self] in
-            vm.getlink()
-            print("Tapped: \(vm.movieLink)")
-            if vm.movieLink == "" {
-                if let url = vm.movie?.posterURL {
+        detailsView.viewOnlineButton.rx.tap.bind { [weak self] in
+            guard let self = self else { return }
+            self.vm.getlink()
+            print("Tapped: \(self.vm.movieLink)")
+            if self.vm.movieLink == "" {
+                if let url = self.vm.movie?.posterURL {
                     UIApplication.shared.open(url)
                 }
-            } else      {
-                if let url = URL(string: vm.movieLink) {
+            } else {
+                if let url = URL(string: self.vm.movieLink) {
                     UIApplication.shared.open(url)
                 }
+            }
+        }
+        .disposed(by: disposeBag)
+        
+        detailsView.shareButton.rx.tap.bind { [weak self] event in
+            guard let self = self else { return }
+            
+            if let myWebsite = NSURL(string: self.vm.movieLink) {
+                let objectsToShare: [Any] = [self.vm.movie?.title, myWebsite]
+                let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                
+                activityVC.popoverPresentationController?.sourceView = self.detailsView.shareButton
+                self.present(activityVC, animated: true, completion: nil)
             }
         }
         .disposed(by: disposeBag)

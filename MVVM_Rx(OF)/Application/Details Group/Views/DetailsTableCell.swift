@@ -57,7 +57,6 @@ class DetailsTableCell: UITableViewCell {
         label.textAlignment = .left
         label.numberOfLines = 1
         label.textColor = UIColor(named: K.Colors.brightBlue)
-        label.text = "AUTHOR NAME"
         return label
     }()
     
@@ -68,7 +67,6 @@ class DetailsTableCell: UITableViewCell {
         label.textAlignment = .left
         label.numberOfLines = 1
         label.textColor = .black
-        label.text = "24.02.2022"
         return label
     }()
     
@@ -79,7 +77,6 @@ class DetailsTableCell: UITableViewCell {
         label.textAlignment = .left
         label.numberOfLines = 2
         label.textColor = UIColor(named: K.Colors.ratingGray)
-        label.text = "You might notice some of the system snippets have a placeholder token where you can navigate and input a missing token. For example, if let snippet"
         return label
     }()
     
@@ -92,6 +89,7 @@ class DetailsTableCell: UITableViewCell {
         setupHstack()
         setupVstack()
         setConstraints()
+        selectionStyle = .none
     }
     
     required init?(coder aDecoder: NSCoder) {
