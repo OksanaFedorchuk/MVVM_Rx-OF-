@@ -252,6 +252,8 @@ class DetailsView: UIView {
         ])
     }
     
+   // MARK: - Configutaion
+    
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         ratingLabel.text = "\(movie.voteAverage)"

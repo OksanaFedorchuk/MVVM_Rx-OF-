@@ -40,11 +40,17 @@ class SearchController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        bindVM()
-        bindAlertOnTap()
+        bindTableView()
+        bindSearchBar()
     }
     
-    // MARK: -  Methods
+    override func viewWillAppear(_ animated: Bool) {
+        title = "Search"
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.barStyle = .default
+    }
+    
+    // MARK: -  Layout methods
     
     private func setupUI() {
         view.addSubview(searchView)
@@ -56,8 +62,10 @@ class SearchController: UIViewController {
         navigationController?.navigationBar.barStyle = .default
     }
     
-    private func bindVM() {
-        
+    
+    // MARK: - VM binding
+    
+    private func bindTableView() {
         // -- tableview binding --
         vm.moviesDriven.driver.drive(searchView.tableView.rx.items(cellIdentifier: SearchTableCell.identifier, cellType: SearchTableCell.self)) { [self] (row, element, cell) in
             cell.movieTitleLabel.text = element.title
@@ -68,7 +76,6 @@ class SearchController: UIViewController {
                 .subscribe(on: MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] data in
                     // Update Image
-                    
                     DispatchQueue.main.async {
                         cell.image.image = UIImage(data: data.data)
                     }
@@ -78,6 +85,22 @@ class SearchController: UIViewController {
         }
         .disposed(by: disposeBag)
         
+        // -- binding for number items --
+        vm.moviesDriven.behavior
+            .map { $0.count }
+            .bind(onNext: { [weak self] num in
+                self?.counter = num
+            })
+            .disposed(by: disposeBag)
+        
+        // -- binding to selected cell in tableview --
+        searchView.tableView.rx.itemSelected
+            .asObservable()
+            .bind(to: vm.selectedIndexSubject)
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindSearchBar() {
         // -- searchbar binding --
         searchView.searchBar.rx.text.orEmpty
             .asObservable()
@@ -99,29 +122,6 @@ class SearchController: UIViewController {
                         strongSelf.pageNumber += 1
                     }
                 }
-            })
-            .disposed(by: disposeBag)
-        
-        // -- binding for number items --
-        vm.moviesDriven.behavior
-            .map { $0.count }
-            .bind(onNext: { [weak self] num in
-                self?.counter = num
-            })
-            .disposed(by: disposeBag)
-        
-        // -- binding to selected cell in tableview --
-        searchView.tableView.rx.itemSelected
-            .asObservable()
-            .bind(to: vm.selectedIndexSubject)
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindAlertOnTap() {
-        // -- Showing alert with movie --
-        vm.selectedMovie?
-            .drive(onNext: { [weak self] movie in
-                self?.coordinator.presentDetails(for: movie)
             })
             .disposed(by: disposeBag)
     }

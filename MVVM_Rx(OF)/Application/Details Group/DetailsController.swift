@@ -12,12 +12,12 @@ import RxCocoa
 class DetailsController: UIViewController, UIScrollViewDelegate {
     
     private var detailsView = DetailsView()
-    private let vm: DetailsViewModel
+    private let vm: MovieDetailsProvideable
     private let disposeBag = DisposeBag()
     
     // MARK: -  Inits
     
-    init(vm: DetailsViewModel) {
+    init(vm: MovieDetailsProvideable) {
         self.vm = vm
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,7 +36,12 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         detailsView.configure(with: vm.movie ?? Movie())
         setupUI()
-        bindVM()
+        bindTable()
+        bindButtons()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.barStyle = .default
     }
     
     // MARK: - Layout methods
@@ -77,7 +82,7 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
     
     // MARK: - VM binding
     
-    private func bindVM() {
+    private func bindTable() {
         //         -- tableview binding --
         vm.movieProductionCompanies.drive(detailsView.detailsTable.rx.items(cellIdentifier: DetailsTableCell.identifier, cellType: DetailsTableCell.self)) { (row, element, cell) in
             cell.configure(with: element)
@@ -111,7 +116,9 @@ class DetailsController: UIViewController, UIScrollViewDelegate {
             }, onError: {_ in
                 // Log error
             }).disposed(by: disposeBag)
-        
+    }
+    
+    private func bindButtons() {
         detailsView.viewOnlineButton.rx.tap.bind { [weak self] in
             guard let self = self else { return }
             self.vm.getlink()

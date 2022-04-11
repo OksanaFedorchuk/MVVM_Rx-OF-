@@ -10,12 +10,17 @@ import RxSwift
 import RxCocoa
 
 protocol MovieDetailsProvideable {
+    
     var movie: Movie? { get }
-    var movieReviews: Driver<[ProductionCompany]>? { get set }
-    func receiveMovies()
+    var movieLink: String { get set }
+    var movieProductionCompanies: Driver<[ProductionCompany]> { get set }
+    
+    func getlink()
 }
 
-final class DetailsViewModel {
+final class DetailsViewModel: MovieDetailsProvideable {
+    
+    // MARK: - Properties
     
     //inputs
     var movie: Movie?
@@ -27,24 +32,28 @@ final class DetailsViewModel {
     private let networkingService = MovieDBAPI()
     private let disposeBag = DisposeBag()
     
+    // MARK: - Init
+    
     init(movie: Movie) {
         self.movie = movie
         
         movieProductionCompanies = networkingService
             .getMovieDetails(for: movie.id)
             .map({ result -> [ProductionCompany] in
-                return result[0].productionCompanies
+                return result.first?.productionCompanies ?? [ProductionCompany]()
             })
             .asDriver(onErrorJustReturn: [ProductionCompany]())
         
         getlink()
     }
     
+    // MARK: - Private methods
+    
     func getlink() {
         networkingService
             .getMovieDetails(for: movie?.id ?? 0)
             .bind(onNext: { [weak self] results in
-                self?.movieLink = results[0].homepage
+                self?.movieLink = results.first?.homepage ?? ""
             })
             .disposed(by: disposeBag)
     }

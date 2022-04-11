@@ -10,6 +10,8 @@ import RxCocoa
 
 final class SearchViewModel {
     
+    // MARK: - Properties
+    
     // Inputs
     let selectedIndexSubject = PublishSubject<IndexPath>()
     let searchQuerySubject = BehaviorRelay(value: "")
@@ -25,6 +27,8 @@ final class SearchViewModel {
     
     private var isNew = false
     
+    // MARK: - Inits
+    
     init() {
         
         subscribeToSearch()
@@ -39,6 +43,8 @@ final class SearchViewModel {
             }
             .asDriver(onErrorJustReturn: Movie())
     }
+    
+    // MARK: - Methods
     
     private func subscribeToSearch() {
         
@@ -56,8 +62,8 @@ final class SearchViewModel {
                     }
             }
             .map { [weak self] response -> [Movie] in
-                self?.count = response[0].totalPages
-                return response[0].movies ?? []
+                self?.count = response.first?.totalPages ?? 0
+                return response.first?.movies ?? []
             }
             .bind(onNext: { [weak self] items in
                 guard let self = self else { return }
@@ -82,7 +88,7 @@ final class SearchViewModel {
             .disposed(by: disposeBag)
     }
     
-    func publishTextAndPage() -> Observable<(searchText: String, page: Int)> {
+    private func publishTextAndPage() -> Observable<(searchText: String, page: Int)> {
         return Observable
             .combineLatest(
                 searchQuerySubject

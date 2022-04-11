@@ -49,6 +49,8 @@ class SearchView: UIView {
         super.layoutSubviews()
     }
     
+    // MARK: - Layout methods
+    
     private func addSubviews() {
         addSubview(container)
         container.addSubview(searchBar)
@@ -73,6 +75,8 @@ class SearchView: UIView {
             tableView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
         ])
     }
+    
+    // MARK: - Header setup
     
     private func setupTableHeader() {
         let headerView: UIView = UIView.init(frame: CGRect(x: 12, y: 50, width: 276, height: 30))

@@ -129,6 +129,8 @@ class DetailsTableCell: UITableViewCell {
         ])
     }
     
+    // MARK: - Configuration
+    
     func configure(with company: ProductionCompany) {
         authorNameLabel.text = company.name
         contentLabel.text = company.originCountry
